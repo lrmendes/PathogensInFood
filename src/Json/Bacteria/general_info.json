@@ -1,0 +1,33 @@
+{
+    "confirmation": {
+        "yes": null,
+        "no": null,
+        "NA": null
+    },
+    "nsamples": null,
+    "packaged_status": {
+        "packed": null,
+        "unpacked": null
+    },
+    "stage": {
+        "End_Processing": null,
+        "Farm": null,
+        "Mid_Processing": null,
+        "Restauration": null,
+        "Retail": null
+    },
+    "temp_retail": {
+        "Ambient": null,
+        "Chill": null,
+        "Frozen": null,
+        "Various": null
+    },
+    "label": null,
+    "RTE": {
+        "yes": null,
+        "no": null
+    },
+    "bias_potential": null,
+    "reason": null,
+    "comments": null
+}

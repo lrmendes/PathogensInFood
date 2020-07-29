@@ -1,0 +1,602 @@
+{
+  "label": "category",
+  "beverages": {
+    "label": "subcategory",
+    "coffe_tea": null,
+    "juices": null,
+    "undefinedB": null,
+    "soft_drink": null,
+    "water": null
+  },
+  "composite": {
+    "label": "subcategory",
+    "RTE": {
+      "label": "foodclass",
+      "cooked": null,
+      "raw": null,
+      "NA": null
+    },
+    "dishes": {
+      "label": "foodclass",
+      "cooked": null,
+      "raw": null,
+      "NA": null
+    },
+    "sandwich": {
+      "label": "foodclass",
+      "cooked": null,
+      "raw": null,
+      "NA": null
+    },
+    "fast_food": {
+      "label": "foodclass",
+      "cooked": null,
+      "raw": null,
+      "NA": null
+    },
+    "undefinedC": {
+      "label": "foodclass",
+      "cooked": null,
+      "raw": null,
+      "NA": null
+    }
+  },
+  "dairy": {
+    "label": "subcategory",
+    "cheese": {
+      "label": "foodclass",
+      "hard": {
+        "label": "HeatTreatedCheese",
+        "pasteurized": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        },
+        "raw": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        },
+        "NA": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        }
+      },
+      "semihard": {
+        "label": "HeatTreatedCheese",
+        "pasteurized": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        },
+        "raw": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        },
+        "NA": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        }
+      },
+      "soft": {
+        "label": "HeatTreatedCheese",
+        "pasteurized": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        },
+        "raw": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        },
+        "NA": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        }
+      },
+      "NA": {
+        "label": "HeatTreatedCheese",
+        "pasteurized": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        },
+        "raw": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        },
+        "NA": {
+          "label": "foodclassspecie",
+          "bovine": null,
+          "ovine": null,
+          "caprine": null,
+          "camel": null,
+          "mixed": null,
+          "NA": null
+        }
+      }
+    },
+    "fats": null,
+    "fermented": null,
+    "milk": {
+      "label": "foodclass",
+      "pasteurised": {
+        "label": "foodclassspecie",
+        "bovine": null,
+        "ovine": null,
+        "caprine": null,
+        "donkey": null,
+        "mixed": null,
+        "NA": null
+      },
+      "raw": {
+        "label": "foodclassspecie",
+        "bovine": null,
+        "ovine": null,
+        "caprine": null,
+        "donkey": null,
+        "mixed": null,
+        "NA": null
+      },
+      "NA": {
+        "label": "foodclassspecie",
+        "bovine": null,
+        "ovine": null,
+        "caprine": null,
+        "donkey": null,
+        "mixed": null,
+        "NA": null
+      }
+    },
+    "powder": null,
+    "undefinedD": {
+      "label": "foodclass",
+      "pasteurised": {
+        "label": "foodclassspecie",
+        "bovine": null,
+        "ovine": null,
+        "caprine": null,
+        "donkey": null,
+        "mixed": null,
+        "NA": null
+      },
+      "raw": {
+        "label": "foodclassspecie",
+        "bovine": null,
+        "ovine": null,
+        "caprine": null,
+        "donkey": null,
+        "mixed": null,
+        "NA": null
+      }
+    },
+    "whey": null
+  },
+  "eggs": {
+    "label": "subcategory",
+    "eggs": {
+      "label": "foodclass",
+      "pasteurized": null,
+      "raw": null,
+      "NA": null
+    },
+    "eggproducts": {
+      "label": "foodclass",
+      "pasteurized": null,
+      "raw": null,
+      "NA": null
+    },
+    "NA": {
+      "label": "foodclass",
+      "pasteurized": null,
+      "raw": null,
+      "NA": null
+    }
+  },
+  "fruits": {
+    "label": "subcategory",
+    "berries": {
+      "label": "foodclass",
+      "precut": null,
+      "NA": null
+    },
+    "dried": {
+      "label": "foodclass",
+      "precut": null,
+      "NA": null
+    },
+    "drupes": {
+      "label": "foodclass",
+      "precut": null,
+      "NA": null
+    },
+    "pome": {
+      "label": "foodclass",
+      "precut": null,
+      "NA": null
+    },
+    "processedF": {
+      "label": "foodclass",
+      "precut": null,
+      "NA": null
+    },
+    "undefinedF": {
+      "label": "foodclass",
+      "precut": null,
+      "NA": null
+    }
+  },
+  "grains": {
+    "label": "subcategory",
+    "bread": null,
+    "cakes_pastries": null,
+    "cereals": {
+      "label": "foodclass",
+      "cooked": null,
+      "NA": null
+    },
+    "pasta": {
+      "label": "foodclass",
+      "cooked": null,
+      "NA": null
+    },
+    "undefinedg": {
+      "label": "foodclass",
+      "cooked": null,
+      "NA": null
+    }
+  },
+  "legumes": {
+    "label": "subcategory",
+    "dryseeds": null,
+    "legumes": {
+      "label": "foodclass",
+      "cooked": null,
+      "dried": null,
+      "NA": null
+    },
+    "nuts": null,
+    "oilseeds": null,
+    "processedL": {
+      "label": "foodclass",
+      "cooked": null,
+      "dried": null,
+      "NA": null
+    },
+    "spices": {
+      "label": "foodclass",
+      "cooked": null,
+      "dried": null,
+      "NA": null
+    }
+  },
+  "meat": {
+    "label": "subcategory",
+    "beef": {
+      "label": "foodclass",
+      "cooked": null,
+      "mince": null,
+      "precut": null,
+      "NA": null
+    },
+    "chicken": {
+      "label": "foodclass",
+      "cooked": null,
+      "mince": null,
+      "precut": null,
+      "NA": null
+    },
+    "game": {
+      "label": "foodclass",
+      "cooked": null,
+      "mince": null,
+      "precut": null,
+      "NA": null
+    },
+    "othermeats": {
+      "label": "foodclass",
+      "cooked": {
+        "label": "foodclassspecie",
+        "caprine": null,
+        "equine": null,
+        "ovine": null,
+        "rabbit": null,
+        "NA": null
+      },
+      "mince": {
+        "label": "foodclassspecie",
+        "caprine": null,
+        "equine": null,
+        "ovine": null,
+        "rabbit": null,
+        "NA": null
+      },
+      "precut": {
+        "label": "foodclassspecie",
+        "caprine": null,
+        "equine": null,
+        "ovine": null,
+        "rabbit": null,
+        "NA": null
+      },
+      "NA": {
+        "label": "foodclassspecie",
+        "caprine": null,
+        "equine": null,
+        "ovine": null,
+        "rabbit": null,
+        "NA": null
+      }
+    },
+    "otherpoultry": {
+      "label": "foodclass",
+      "cooked": {
+        "label": "foodclassspecie",
+        "duck": null,
+        "other": null,
+        "turkey": null,
+        "NA": null
+      },
+      "mince": {
+        "label": "foodclassspecie",
+        "duck": null,
+        "other": null,
+        "turkey": null,
+        "NA": null
+      },
+      "precut": {
+        "label": "foodclassspecie",
+        "duck": null,
+        "other": null,
+        "turkey": null,
+        "NA": null
+      },
+      "NA": {
+        "label": "foodclassspecie",
+        "duck": null,
+        "other": null,
+        "turkey": null,
+        "NA": null
+      }
+    },
+    "pork": {
+      "label": "foodclassspecie",
+      "cooked": null,
+      "mince": null,
+      "precut": null,
+      "NA": null
+    },
+    "procmeat": {
+      "label": "foodclass",
+      "cooked": {
+        "label": "foodclassspecie",
+        "bovine": null,
+        "mixed": null,
+        "ovine": null,
+        "pork": null,
+        "poultry": null,
+        "NA": null
+      },
+      "cured": {
+        "label": "foodclassspecie",
+        "bovine": null,
+        "mixed": null,
+        "ovine": null,
+        "pork": null,
+        "poultry": null,
+        "NA": null
+      },
+      "raw": {
+        "label": "foodclassspecie",
+        "bovine": null,
+        "mixed": null,
+        "ovine": null,
+        "pork": null,
+        "poultry": null,
+        "NA": null
+      },
+      "NA": {
+        "label": "foodclassspecie",
+        "bovine": null,
+        "mixed": null,
+        "ovine": null,
+        "pork": null,
+        "poultry": null,
+        "NA": null
+      }
+    },
+    "undefinedM": {
+      "label": "foodclass",
+      "cooked": null,
+      "mince": null,
+      "precut": null,
+      "NA": null
+    }
+  },
+  "oils": null,
+  "seafood": {
+    "label": "subcategory",
+    "crustaceans": {
+      "label": "foodclass",
+      "fresh": {
+        "label": "foodclassspecie",
+        "shrimp": null,
+        "crab": null,
+        "other": null,
+        "NA": null
+      },
+      "precut": {
+        "label": "foodclassspecie",
+        "shrimp": null,
+        "crab": null,
+        "other": null,
+        "NA": null
+      },
+      "cooked": {
+        "label": "foodclassspecie",
+        "shrimp": null,
+        "crab": null,
+        "other": null,
+        "NA": null
+      },
+      "NA": {
+        "label": "foodclassspecie",
+        "shrimp": null,
+        "crab": null,
+        "other": null,
+        "NA": null
+      }
+    },
+    "fish": {
+      "label": "foodclass",
+      "fresh": null,
+      "precut": null,
+      "cooked": null,
+      "NA": null
+    },
+    "molluscs": {
+      "label": "foodclass",
+      "cooked": {
+        "label": "foodclassspecie",
+        "cockles": null,
+        "mussels": null,
+        "oysters": null,
+        "other": null,
+        "NA": null
+      },
+      "fresh": {
+        "label": "foodclassspecie",
+        "cockles": null,
+        "mussels": null,
+        "oysters": null,
+        "other": null,
+        "NA": null
+      },
+      "precut": {
+        "label": "foodclassspecie",
+        "cockles": null,
+        "mussels": null,
+        "oysters": null,
+        "other": null,
+        "NA": null
+      },
+      "NA": {
+        "label": "foodclassspecie",
+        "cockles": null,
+        "mussels": null,
+        "oysters": null,
+        "other": null,
+        "NA": null
+      }
+    },
+    "processedS": {
+      "label": "foodclass",
+      "dry": null,
+      "marinated": null,
+      "smoked": null,
+      "NA": null
+    },
+    "undefinedS": {
+      "label": "foodclass",
+      "fresh": null,
+      "precut": null,
+      "cooked": null,
+      "NA": null
+    }
+  },
+  "sugars": null,
+  "vegetables": {
+    "label": "subcategory",
+    "aromaticherbs": {
+      "label": "foodclass",
+      "dried": null,
+      "minimally": null,
+      "cooked": null,
+      "NA": null
+    },
+    "fresh": {
+      "label": "foodclass",
+      "minimally": null,
+      "NA": null
+    },
+    "fungi": {
+      "label": "foodclass",
+      "dried": null,
+      "minimally": null,
+      "cooked": null,
+      "NA": null
+    },
+    "roots": {
+      "label": "foodclass",
+      "dried": null,
+      "minimally": null,
+      "cooked": null,
+      "NA": null
+    },
+    "sprouts": {
+      "label": "foodclass",
+      "dried": null,
+      "minimally": null,
+      "cooked": null,
+      "NA": null
+    },
+    "vegproducts": {
+      "label": "foodclass",
+      "dried": null,
+      "minimally": null,
+      "fermented": null,
+      "cooked": null,
+      "NA": null
+    }
+  }
+}

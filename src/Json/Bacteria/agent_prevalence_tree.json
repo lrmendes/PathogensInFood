@@ -1,0 +1,254 @@
+{
+    "label": "agent",
+    "bacillus_cereus": {
+        "label": "essay_det_type",
+        "culture": {
+            "label": "essay_det",
+            "bacillus_selective": null,
+            "myp": null
+        },
+        "DNA": {
+            "label": "essay_det",
+            "PCR": null
+        },
+        "NA": null
+    },
+    "campylobacter_spp": {
+        "label": "essay_det_type",
+        "culture": {
+            "label": "essay_det",
+            "campy_BAP": null,
+            "campylobacterselective": null,
+            "CCA": null,
+            "columbia": null,
+            "exeterselective": null,
+            "FAO": null,
+            "ISO_10272_1_1995": null,
+            "ISO_10272_1_2006": null,
+            "mCCDA": null,
+            "muller_hinton": null,
+            "NA": null,
+            "NMKL_119": null,
+            "PHLS_F21": null
+        },
+        "DNA": {
+            "label": "essay_det",
+            "PCR": null
+        },
+        "immuno": {
+            "label": "essay_det",
+            "vidas_cam": null
+        },
+        "NA": null
+    },
+    "clostridium_perfringens": {
+        "label": "essay_det_type",
+        "NA": null
+    },
+    "listeria_monocytogenes": {
+        "label": "essay_det_type",
+        "culture": {
+            "label": "essay_det",
+            "AFNOR_BRD_07/4-09/98": null,
+            "APHA_2001": null,
+            "FSIS-USDA": null,
+            "I+ALOA": null,
+            "I+ALOA+ListeriaSelective": null,
+            "I+ALOA+Oxford": null,
+            "I+Chromogenic": null,
+            "I+II+ALOA+Oxford": null,
+            "I+II+Chromogenic": null,
+            "I+II+ListeriaSelective": null,
+            "I+II+ListeriaSelective+Oxford": null,
+            "I+II+Oxford": null,
+            "I+II+Oxford+PALCAM": null,
+            "I+II+PALCAM": null,
+            "I+II+RAPID": null,
+            "I+ListeriaSelective": null,
+            "I+ListeriaSelective+PALCAM": null,
+            "I+LPM+Blood": null,
+            "I+Oxford": null,
+            "I+Oxford+PALCAM": null,
+            "I+PALCAM": null,
+            "IMS+ListeriaSelective": null,
+            "IMS+Oxford": null,
+            "IMS+PALCAM": null,
+            "IMS+PALCAM+Oxford": null,
+            "ISO_11290-1": null,
+            "ISO_11290-1:1996": null,
+            "ISO_11290-1:2004": null,
+            "NMKL_136": null,
+            "PHLS_F19": null,
+            "NA": null
+        },
+        "DNA": {
+            "label": "essay_det",
+            "IMS+PCR": null,
+            "iQ-Check": null,
+            "PCR": null
+        },
+        "immuno": {
+            "label": "essay_det",
+            "AFNOR_BIO_12/11-03/04": null,
+            "VIDAS_LMO2": null
+        },
+        "NA": null
+    },
+    "salmonella_spp": {
+        "label": "essay_det_type",
+        "culture": {
+            "label": "essay_det",
+            "AOAC_1998": null,
+            "APHA_2001": null,
+            "BS_EN_12824:1998": null,
+            "DIASSALM+Rambach": null,
+            "IDF_Standard_93B": null,
+            "IMS+HE/XLD": null,
+            "IMS+XLD": null,
+            "ISO_6579:1993": null,
+            "ISO_6579:2002": null,
+            "ISO_6579:2004": null,
+            "ISO_6579:2007": null,
+            "ISO_6785:2001": null,
+            "N/S": null,
+            "NF_V08-052": null,
+            "NMKL_71": null,
+            "PHLS_F13": null,
+            "RAPIDCapsule+Agar": null,
+            "RV/SC+BG": null,
+            "RV/SC+BG/BS": null,
+            "RV/SC+BG/HE": null,
+            "RV/SC+BG/SS": null,
+            "RV/SC+BG/XLD": null,
+            "RV/SC+BS/SS": null,
+            "RV/SC+HE": null,
+            "RV/SC+HE/SS/XLD": null,
+            "RV/SC+Rambach": null,
+            "RV/SC+XLD": null,
+            "RV/TT+BG": null,
+            "RV/TT+BG/BS/XLD": null,
+            "RV/TT+BG/XLD": null,
+            "RV/TT+BS/HE/XLD": null,
+            "RV/TT+Chromogenic": null,
+            "RV/TT+HE/SS": null,
+            "RV/TT+HE/XLD": null,
+            "RV/TT+McConkey/XLD": null,
+            "RV/TT+Rambach/XLD": null,
+            "RV/TT+XLD": null,
+            "RV+BG": null,
+            "RV+BG/HE": null,
+            "RV+BG/HE/XLD": null,
+            "RV+BG/XLD": null,
+            "RV+Chromogenic": null,
+            "RV+Rambach": null,
+            "RV+SS": null,
+            "RV+XLD": null,
+            "SC/TT+BG/HE/XLD": null,
+            "SC/TT+BG/SS/XLD": null,
+            "SC/TT+XLD": null,
+            "SC+BG/BS": null,
+            "SC+BS": null,
+            "SC+BS/SS": null,
+            "SC+Chromogenic": null,
+            "SC+Rambach": null,
+            "SC+SS": null,
+            "SC+XLD": null,
+            "Standard_M19": null,
+            "TT+BG/BS/XLD": null,
+            "TT+HE": null,
+            "TT+McConkey/XLD": null,
+            "TT+SS": null,
+            "TT+XLD": null
+        },
+        "DNA": {
+            "label": "essay_det",
+            "iQ-Check": null,
+            "PCR": null
+        },
+        "immuno": {
+            "label": "essay_det",
+            "ELISA": null,
+            "VIDAS_SLM": null
+        }
+    },
+    "staphylococcus_aureus": {
+        "label": "essay_det_type",
+        "culture": {
+            "label": "essay_det",
+            "ISO_6888-2:1999": null,
+            "APHA_1992": null,
+            "MHB+Chromogenic": null,
+            "MHB+MRSA-ID": null,
+            "MHB+PHMB+MRSA-ID": null,
+            "MHB+TSB+Chromogenic": null
+        },
+        "DNA": {
+            "label": "essay_det",
+            "PCR": null
+        },
+        "NA": null
+    },
+    "shigatoxin_producing_escherichia_coli_STEC": {
+        "label": "essay_det_type",
+        "culture": {
+            "label": "essay_det",
+            "APHA_2001": null,
+            "BAM": null,
+            "BGB+SMAC": null,
+            "Biolog_MicroStation": null,
+            "BPW+CT-SMAC": null,
+            "IMS+Chromogenic": null,
+            "IMS+CT-SMAC": null,
+            "ISO_16654:2001": null,
+            "mEC+CT-SMAC": null,
+            "mEC+SMAC": null,
+            "N/S": null,
+            "PHLS_F17": null,
+            "TSB+Chromogenic": null,
+            "TSB+CT-SMAC": null,
+            "TSB+SMAC": null
+        },
+        "DNA": {
+            "label": "essay_det",
+            "GeneDisc": null,
+            "IMS+PCR": null,
+            "iQ-Check": null,
+            "ISO/TS_13136:2012": null,
+            "PCR": null
+        },
+        "immuno": {
+            "label": "essay_det",
+            "AFNOR_BIO_12/8-07/00": null,
+            "ISO_16654:2001": null,
+            "LatexTest": null,
+            "VIDAS-ECO": null,
+            "VIDAS-ICE": null
+        }
+    },
+    "yersinia_enterocolitica": {
+        "label": "essay_det_type",
+        "culture": {
+            "label": "essay_det",
+            "CIN": null,
+            "ISO_10273:1994": null,
+            "ISO_10273:2003": null,
+            "ITC+CIN": null,
+            "N/S": null,
+            "PBS+CIN": null,
+            "PBSS+CIN": null,
+            "TPW+CIN": null,
+            "TSB+BOS+CIN": null,
+            "TSB+CIN": null,
+            "YersiniaBroth+CIN": null
+        },
+        "DNA": {
+            "label": "essay_det",
+            "NMKL_163": null,
+            "PCR": null
+        },
+        "immuno": {
+            "label": "essay_det",
+            "ELISA": null
+        }
+    }
+}
