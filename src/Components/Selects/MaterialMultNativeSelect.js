@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useField } from '@unform/core';
 import Colors from "../../Styles/Colors";
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,32 +6,43 @@ import { NativeSelect, Select } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     selectLabel: {
-        marginTop: theme.spacing(1),
+        marginTop: theme.spacing(2),
         color: Colors.grayDark,
         fontWeight: 'bold',
     },
-    selectLabelError: {
-      marginTop: theme.spacing(1),
-      color: '#ff0000',
-      fontWeight: 'bold',
-    },
     selectText: {
         marginTop: theme.spacing(0.5),
-        marginBottom: theme.spacing(1),
     },
     selectTextError: {
       marginTop: theme.spacing(0.5),
     },
+    labelTextInfo: {
+      marginTop: theme.spacing(0.5),
+      marginBottom: theme.spacing(2),
+      color: Colors.primaryDarkHigh
+    },
     labelTextError: {
-      marginBottom: theme.spacing(1),
-      color: "#f00",
-    }
+      color: Colors.errorDefault
+    },
   }));
 
-const MaterialSelect = ({ name, label, defaultValue, labelError, ...rest }) => {
+const MaterialMultNativeSelect = ({ name, label, defaultValue, labelError, ...rest }) => {
   const classes = useStyles();
   const selectRef = useRef(null);
   const { fieldName, registerField, error } = useField(name);
+
+  const [selectedNumber, setSelectedNumber] = useState(0);
+
+  const handleChangeMultiple = (event) => {
+    const { options } = event.target;
+    let total = 0;
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        total += 1;
+      }
+    }
+    setSelectedNumber(total);
+  };
 
   useEffect(() => {
     registerField({
@@ -71,7 +82,7 @@ const MaterialSelect = ({ name, label, defaultValue, labelError, ...rest }) => {
             native={true}
             inputRef={selectRef}
             defaultValue={defaultValue}
-            className={error ? classes.selectTextError : classes.selectText}
+            className={classes.selectText}
             id={fieldName}
             variant="outlined"
             inputProps={{
@@ -79,11 +90,14 @@ const MaterialSelect = ({ name, label, defaultValue, labelError, ...rest }) => {
                     padding: 10,
                 }
             }}
+            onChange={handleChangeMultiple}
+
             {...rest}
         />
         {error && <span className={classes.labelTextError}>{labelError}</span>}
+        {<span className={classes.labelTextInfo}>Selected Items: {selectedNumber}</span>}
     </>
   );
 };
 
-export default MaterialSelect;
+export default MaterialMultNativeSelect;

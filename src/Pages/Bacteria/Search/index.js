@@ -11,6 +11,12 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
+import { Menu } from '@material-ui/core';
+
+
+import Switch from '@material-ui/core/Switch';
+import Collapse from '@material-ui/core/Collapse';
+
 import {
   TextField,
   RadioGroup,
@@ -26,6 +32,7 @@ import { Form } from "@unform/web";
 import MaterialInput from "../../../Components/Inputs/MaterialInput";
 //import MaterialSelect from "../../../Components/Selects/MaterialSelect";
 import MaterialNativeSelect from "../../../Components/Selects/MaterialNativeSelect";
+import MaterialMultNativeSelect from "../../../Components/Selects/MaterialMultNativeSelect";
 
 import CustomSelect from "../../../Components/Selects/CustomSelect";
 
@@ -91,6 +98,8 @@ export default function BacteriaSearch() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const [advancedFilters, setAdvancedFilters] = useState(false);
+
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
 
@@ -131,6 +140,10 @@ export default function BacteriaSearch() {
   // Tree & General Info
   const jsonGeneralInfo = json_general_info;
   const [dataGeneralInfo, setDataGeneralInfo] = useState({});
+
+  const handleAdvancedFilters = () => {
+      setAdvancedFilters((prev) => !prev);
+  };
 
   const handleAgent = (event) => {
     if (event == "null" || event == "") {
@@ -1296,169 +1309,47 @@ export default function BacteriaSearch() {
       <Grid item xs={12} md={12}>
       <Form ref={formRef} className={classes.formWide} onSubmit={handleSubmit}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={12}>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Study Info</Typography>
+        <Grid item xs={12} md={6}>
+          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Pathogen</Typography>
           <Divider />
           <Paper className={fixedHeightPaper}>
-          <CustomSelect
-            label={"food_origin"}
-            defaultValue={""}
-            name={"food_origin"}
-            items={jsonstudies}
-            clearable={true}
-          />
+          <MaterialMultNativeSelect
+            name="agent"
+            label={"Select Agent"}
+            labelError={blank_text_error}
+            multiple
+            inputProps={{
+              style: {
+                  padding: 10,
+                  minHeight: "150px",
+              }
+            }}
+          >
+            {Object.keys(jsonAgent).map(key => 
+              key != "label" && key != "selected" ? (
+                <option key={key} value={key}>
+                  {key}
+                </option >
+              ) : null
+            )}
+          </MaterialMultNativeSelect>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={12}>
-                <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Agent Info</Typography>
-                <Divider />
-                <Paper className={fixedHeightPaper}>
-                    <MaterialNativeSelect
-                      name="agent"
-                      label={"Select Agent"}
-                      labelError={blank_text_error}
-                      onChange={(event) => handleAgent(event.target.value)}
-                    >
-                      <option value={""}>Select</option >
-                      {Object.keys(jsonAgent).map(key => 
-                        key != "label" && key != "selected" ? (
-                          <option key={key} value={key}>
-                            {key}
-                          </option >
-                        ) : null
-                      )}
-                    </MaterialNativeSelect>
-
-                {selectedAgent ? 
-                <FormControl component="fieldset" className={classes.formControl}>
-                <FormLabel component="legend">Essay Type</FormLabel>
-                <RadioGroup row aria-label="essayType" name="essayType1" value={essayType} onChange={handleEssayType}>
-                  <FormControlLabel value="0" control={<Radio />} label="Prevalence" />
-                  <FormControlLabel value="1" control={<Radio />} label="Count" />
-                  <FormControlLabel value="2" control={<Radio />} label="Both" />
-                </RadioGroup>
-                </FormControl>
-                : null}
-                </Paper>
-              </Grid>
-          { essayType == 2 || essayType == 0 ?
-          <Grid item xs={12} md={12}>
-                <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Essay Prevalence</Typography>
-                <Divider />
-                <Paper className={fixedHeightPaper}>
-                { 
-                      (dataAuxEssayPrevalence.map((json,index) => {
-                        return (
-                          <MaterialNativeSelect
-                            key={json.label}
-                            label={json.label}
-                            labelError={blank_text_error}
-                            onChange={(event) => handleChange(json.label,index,event.target.value)}
-                            name={json.label}
-                          >
-                            <option value={""}>Select</option >
-                            {Object.keys(json).map(key => 
-                              key != "label" && key != "selected" ? (
-                                <option key={key} value={key}>
-                                  {key}
-                                </option >
-                              ) : null
-                            )}
-                          </MaterialNativeSelect>
-                      )}))
-                }
-                { 
-                    (Object.keys(jsonPrevalenceGeneralInfo).map((json, index) => {
-                      return (jsonPrevalenceGeneralInfo[json] == null 
-                        ? 
-                        <MaterialInput
-                          key={json}
-                          name={json}
-                          label={json+blank_text}
-                          labelError={blank_text_error}
-                          placeholder={"enter text..."}
-                        />
-                        :
-                        <MaterialNativeSelect
-                        key={json}
-                        label={json}
-                        defaultValue={""}
-                        labelError={blank_text_error}
-                        name={json}
-                        >
-                        <option value={""}>Select</option >
-                        {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                          key != "label" && key != "selected" ? (
-                            <option key={key} value={key}>
-                              {key}
-                            </option >
-                          ) : null
-                        )}
-                        </MaterialNativeSelect>
-                    )}))
-              }
-                </Paper>
-              </Grid>
-          : null}
-
-          { essayType == 2 || essayType == 1 ?
-          <Grid item xs={12} md={12}>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Essay Count</Typography>
+        <Grid item xs={12} md={6}>
+          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Essay Type</Typography>
           <Divider />
           <Paper className={fixedHeightPaper}>
-          { 
-                (dataAuxEssayCount.map((json,index) => {
-                  return (
-                    <MaterialNativeSelect
-                      key={json.label}
-                      label={json.label}
-                      labelError={blank_text_error}
-                      onChange={(event) => handleChange(json.label,index,event.target.value)}
-                      name={json.label}
-                    >
-                      <option value={""}>Select</option >
-                      {Object.keys(json).map(key => 
-                        key != "label" && key != "selected" ? (
-                          <option key={key} value={key}>
-                            {key}
-                          </option >
-                        ) : null
-                      )}
-                    </MaterialNativeSelect>
-                )}))
-          }
-          { 
-                (Object.keys(jsonCountGeneralInfo).map((json, index) => {
-                  return (jsonCountGeneralInfo[json] == null 
-                  ? 
-                  <MaterialInput
-                    key={json}
-                    name={json}
-                    label={json+blank_text}
-                    placeholder={"enter text..."}
-                  />
-                  :
-                  <MaterialNativeSelect
-                  key={json}
-                  labelError={blank_text_error}
-                  label={json}
-                  defaultValue={""}
-                  name={json}
-                  >
-                  <option value={""}>Select</option >
-                  {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                    key != "label" && key != "selected" ? (
-                      <option key={key} value={key}>
-                        {key}
-                      </option >
-                    ) : null
-                  )}
-                  </MaterialNativeSelect>
-                )}))
-          }
+          <MaterialNativeSelect
+            name="essay"
+            label={"Select Essay"}
+            labelError={blank_text_error}
+          >
+            <option value={"prevalence"}>Prevalence</option>
+            <option value={"count"}>Count</option>
+            <option value={"both"}>Both</option>
+          </MaterialNativeSelect>
           </Paper>
-          </Grid>
-          : null}
+        </Grid>
 
           <Grid item xs={12} md={12}>
             <Typography
@@ -1503,47 +1394,56 @@ export default function BacteriaSearch() {
               {/*<Button onClick={clearData}>Clear Data</Button>*/}
             </Paper>
           </Grid>
+  
           <Grid item xs={12} md={12}>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              className={classes.title}
-            >
-              General Info
-            </Typography>
-            <Divider />
-            {/*console.log("RODOU")*/}
-            <Paper className={fixedHeightPaper}>
-              {Object.keys(jsonGeneralInfo).map((json, index) => {
-                return jsonGeneralInfo[json] == null ? (
-                  <MaterialInput
-                    key={json}
-                    name={json}
-                    label={json+blank_text}
-                    placeholder={"enter text..."}
-                  />
-                ) : (
-                    <MaterialNativeSelect
-                      key={json}
-                      label={json}
-                      labelError={blank_text_error}
-                      defaultValue={""}
-                      name={json}
-                    >
-                      <option value={""}>Select</option >
-                      {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                        key != "label" && key != "selected" ? (
-                          <option key={key} value={key}>
-                            {key}
-                          </option >
-                        ) : null
-                      )}
-                    </MaterialNativeSelect>
-                  );
-              })}
-            </Paper>
+            <FormControlLabel
+              control={<Switch checked={advancedFilters} onChange={handleAdvancedFilters} />}
+              label="Show Advanced Filters"
+            />
+            <Collapse in={advancedFilters}>
+                <Typography
+                  component="h1"
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                  className={classes.title}
+                >
+                  General Info
+                </Typography>
+                <Divider />
+                {/*console.log("RODOU")*/}
+                <Paper className={fixedHeightPaper}>
+                  {Object.keys(jsonGeneralInfo).map((json, index) => {
+                    return jsonGeneralInfo[json] == null ? (
+                      null
+                    ) : (
+                        <>
+                        <MaterialMultNativeSelect
+                          key={json}
+                          label={json}
+                          name={json}
+                          labelError={blank_text_error}
+                          multiple
+                          inputProps={{
+                            style: {
+                                padding: 10,
+                            }
+                          }}
+                        >
+                          {Object.keys(jsonGeneralInfo[json]).map((key) =>
+                            key != "label" && key != "selected" ? (
+                              <option key={key} value={key}>
+                                {key}
+                              </option >
+                            ) : null
+                          )}
+                        </MaterialMultNativeSelect>
+                        <Divider />
+                        </>
+                      );
+                  })}
+                </Paper>
+            </Collapse>
           </Grid>
           <Grid item xs={12} md={12} container justify="flex-end">
               <Button

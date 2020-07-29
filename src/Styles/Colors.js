@@ -21,6 +21,7 @@ export default {
     primaryLight: "#51adf6",
     primary: "#2196f3",
     primaryDark: "#0a6ebd",
+    primaryDarkHigh: "#044a82",
     primaryUltraDark: "#024173",
 
     secondaryUltraLight: "#b1fdff",
@@ -33,6 +34,8 @@ export default {
     thirdLight: "#00ffee",
     third: "#00ccbe",
     thirdDark: "#00b3a7",
+
+    errorDefault: "#f00",
 
     fourth: "#A546B6",
   };

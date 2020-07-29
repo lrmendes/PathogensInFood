@@ -185,7 +185,7 @@ export default function SideBar({ isOpen, setTitle }) {
             {
               name: "Search",
               icon: <SearchOutlinedIcon />,
-              path: "/search/bacteria",
+              path: "/bacteria/search",
             },
             {
               name: "Register New",

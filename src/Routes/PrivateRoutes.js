@@ -15,7 +15,7 @@ function PrivateRoutes() {
         <MainLayout>
             <Route path="/" exact component={Dashboard} />
             <Route path="/new/bacteria" exact component={BacteriaNew} />
-            <Route path="bacteria/search" exact component={BacteriaSearch} />     
+            <Route path="/bacteria/search" exact component={BacteriaSearch} />     
             <Route path="/new/study" exact component={StudyNew} />
         </MainLayout>
       </Switch>
