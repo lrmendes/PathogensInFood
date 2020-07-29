@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.js": "/PathogensInFood/static/js/main.5af090cd.chunk.js",
+    "main.js.map": "/PathogensInFood/static/js/main.5af090cd.chunk.js.map",
+    "runtime-main.js": "/PathogensInFood/static/js/runtime-main.48c3daed.js",
+    "runtime-main.js.map": "/PathogensInFood/static/js/runtime-main.48c3daed.js.map",
+    "static/js/2.e5895402.chunk.js": "/PathogensInFood/static/js/2.e5895402.chunk.js",
+    "static/js/2.e5895402.chunk.js.map": "/PathogensInFood/static/js/2.e5895402.chunk.js.map",
+    "index.html": "/PathogensInFood/index.html",
+    "precache-manifest.b445cf6bf7f0c3e7e220dd43488cd7a1.js": "/PathogensInFood/precache-manifest.b445cf6bf7f0c3e7e220dd43488cd7a1.js",
+    "service-worker.js": "/PathogensInFood/service-worker.js",
+    "static/js/2.e5895402.chunk.js.LICENSE.txt": "/PathogensInFood/static/js/2.e5895402.chunk.js.LICENSE.txt",
+    "static/media/bacteria.8f08db80.svg": "/PathogensInFood/static/media/bacteria.8f08db80.svg",
+    "static/media/cimo_bg_menu2.jpg": "/PathogensInFood/static/media/cimo_bg_menu2.7204ad86.jpg",
+    "static/media/cimo_logo.svg": "/PathogensInFood/static/media/cimo_logo.aa9dbbc8.svg",
+    "static/media/ipb_logo.svg": "/PathogensInFood/static/media/ipb_logo.52b596c4.svg",
+    "static/media/logo_menu.png": "/PathogensInFood/static/media/logo_menu.6d336348.png",
+    "static/media/parasite.9b51008f.svg": "/PathogensInFood/static/media/parasite.9b51008f.svg",
+    "static/media/virus.b4875b5b.svg": "/PathogensInFood/static/media/virus.b4875b5b.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.48c3daed.js",
+    "static/js/2.e5895402.chunk.js",
+    "static/js/main.5af090cd.chunk.js"
+  ]
+}
