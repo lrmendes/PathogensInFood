@@ -1458,7 +1458,23 @@ export default function BacteriaNew() {
         </Paper>
         </Grid>
         : null}
+        </Grid>
+        </AccordionDetails>
+        </Accordion>
+        </Grid>
 
+        <Grid item xs={12} md={12}>
+        <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          className={classes.formWide}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography variant={"h6"} className={classes.heading}>{"Food"}</Typography>
+        </AccordionSummary>
+        <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
+        <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           <Typography
             component="h1"
@@ -1503,9 +1519,54 @@ export default function BacteriaNew() {
             {/*<Button onClick={clearData}>Clear Data</Button>*/}
           </Paper>
         </Grid>
+          
+        <Grid item xs={12} md={12}>
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            className={classes.title}
+          >
+            Food Characteristics
+          </Typography>
+          <Divider />
+          {/*console.log("RODOU")*/}
+          <Paper className={fixedHeightPaper}>
+            {Object.keys(jsonGeneralInfo).map((json, index) => {
+              return jsonGeneralInfo[json] == null ? (
+                <MaterialInput
+                  key={json}
+                  name={json}
+                  label={json+blank_text}
+                  placeholder={"enter text..."}
+                />
+              ) : (
+                  <MaterialNativeSelect
+                    key={json}
+                    label={json}
+                    labelError={blank_text_error}
+                    defaultValue={""}
+                    name={json}
+                  >
+                    <option value={""}>Select</option >
+                    {Object.keys(jsonGeneralInfo[json]).map((key) =>
+                      key != "label" && key != "selected" ? (
+                        <option key={key} value={key}>
+                          {key}
+                        </option >
+                      ) : null
+                    )}
+                  </MaterialNativeSelect>
+                );
+            })}
+          </Paper>
+        </Grid>
         </Grid>
         </AccordionDetails>
         </Accordion>
+        
+        
         </Grid>
 
         <Grid item xs={12} md={12}>
@@ -1516,10 +1577,11 @@ export default function BacteriaNew() {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant={"h6"} className={classes.heading}>{"Food & Results"}</Typography>
+          <Typography variant={"h6"} className={classes.heading}>{"Results"}</Typography>
         </AccordionSummary>
         <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
         <Grid container spacing={3}>
+        
         { essayType == 2 || essayType == 0 ?
         <Grid item xs={12} md={12}>
               <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Prevalence Results</Typography>
@@ -1597,51 +1659,9 @@ export default function BacteriaNew() {
         </Grid>
         : null}
           
-        <Grid item xs={12} md={12}>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            General Info
-          </Typography>
-          <Divider />
-          {/*console.log("RODOU")*/}
-          <Paper className={fixedHeightPaper}>
-            {Object.keys(jsonGeneralInfo).map((json, index) => {
-              return jsonGeneralInfo[json] == null ? (
-                <MaterialInput
-                  key={json}
-                  name={json}
-                  label={json+blank_text}
-                  placeholder={"enter text..."}
-                />
-              ) : (
-                  <MaterialNativeSelect
-                    key={json}
-                    label={json}
-                    labelError={blank_text_error}
-                    defaultValue={""}
-                    name={json}
-                  >
-                    <option value={""}>Select</option >
-                    {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                      key != "label" && key != "selected" ? (
-                        <option key={key} value={key}>
-                          {key}
-                        </option >
-                      ) : null
-                    )}
-                  </MaterialNativeSelect>
-                );
-            })}
-          </Paper>
-        </Grid>
         </Grid>
         </AccordionDetails>
-        </Accordion>
+        </Accordion>        
         </Grid>
 
         <Grid item xs={12} md={12} container justify="flex-end">
