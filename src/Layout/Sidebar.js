@@ -195,7 +195,7 @@ export default function SideBar({ isOpen, setTitle }) {
             {
               name: "Manage Data",
               icon: <ViewListIcon />,
-              path: "/manage/bacteria",
+              path: "/bacteria/manage",
             }
           ]
         },

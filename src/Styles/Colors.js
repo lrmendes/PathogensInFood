@@ -2,6 +2,8 @@ export default {
     white: "#ffffff",
     black: "#000000",
 
+    backgroundColor: "#EEEEEE",
+
     grayUltraLight: "#fcfcfc",
     grayLight: "#eeeeee",
     grayMedium: "#D3D3D3",

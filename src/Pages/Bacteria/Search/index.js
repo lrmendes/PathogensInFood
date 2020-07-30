@@ -1363,13 +1363,6 @@ export default function BacteriaSearch() {
             </Typography>
             <Divider />
             <Paper className={fixedHeightPaper}>
-              <CustomSelect
-                label={"food_origin"}
-                defaultValue={""}
-                name={"food_origin"}
-                items={jsonCountries}
-                clearable={true}
-              />
               { 
                   (dataAux.map((json,index) => {
                     return (
@@ -1408,11 +1401,32 @@ export default function BacteriaSearch() {
                   noWrap
                   className={classes.title}
                 >
-                  General Info
+                  Advanced Filters
                 </Typography>
                 <Divider />
                 {/*console.log("RODOU")*/}
                 <Paper className={fixedHeightPaper}>
+                    <MaterialMultNativeSelect
+                    label={"food_origin"}
+                    name={"food_origin"}
+                    label={"Select Food Origin"}
+                    labelError={blank_text_error}
+                    multiple
+                    inputProps={{
+                      style: {
+                          padding: 10,
+                          minHeight: "150px",
+                      }
+                    }}
+                    >
+
+                      {jsonCountries.map((country) =>
+                          <option key={country} value={country}>
+                            {country}
+                          </option >
+                      )}
+                    </MaterialMultNativeSelect>
+
                   {Object.keys(jsonGeneralInfo).map((json, index) => {
                     return jsonGeneralInfo[json] == null ? (
                       null
@@ -1452,7 +1466,7 @@ export default function BacteriaSearch() {
                 size="large"
                 className={classes.customBTN}
               >
-                Register
+                Search
               </Button>
             </Grid>
       </Grid>
