@@ -32,6 +32,8 @@ import MaterialInput from "../../../Components/Inputs/MaterialInput";
 //import MaterialSelect from "../../../Components/Selects/MaterialSelect";
 import MaterialNativeSelect from "../../../Components/Selects/MaterialNativeSelect";
 
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
 import CustomSelect from "../../../Components/Selects/CustomSelect";
 
 import CustomAutoComplete from "../../../Components/Selects/CustomAutoComplete";
@@ -99,7 +101,14 @@ export default function BacteriaNew() {
   const formRef = useRef(null);
 
   const classes = useStyles();
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  const [formData,setFormData] = useState({
+    page1: null,
+    page2: null,
+    page3: null
+  })
 
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -1347,7 +1356,7 @@ export default function BacteriaNew() {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant={"h6"} className={classes.heading}>{"Study, Agent & Essay"}</Typography>
+          <Typography variant={"h6"} className={classes.heading}>{"1. Study, Agent & Essay"}</Typography>
         </AccordionSummary>
         <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
         <Grid container spacing={3}>
@@ -1453,52 +1462,35 @@ export default function BacteriaNew() {
                   </MaterialNativeSelect>
               )}))
         }
-        { 
-              (Object.keys(jsonCountGeneralInfo).map((json, index) => {
-                return (jsonCountGeneralInfo[json] == null 
-                ? 
-                <MaterialInput
-                  key={json}
-                  name={json}
-                  label={json+blank_text}
-                  placeholder={"enter text..."}
-                />
-                :
-                <MaterialNativeSelect
-                key={json}
-                labelError={blank_text_error}
-                label={json}
-                defaultValue={""}
-                name={json}
-                >
-                <option value={""}>Select</option >
-                {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                  key != "label" && key != "selected" ? (
-                    <option key={key} value={key}>
-                      {key}
-                    </option >
-                  ) : null
-                )}
-                </MaterialNativeSelect>
-              )}))
-        }
         </Paper>
         </Grid>
         : null}
+
+        <Grid item xs={12} md={12} container justify="flex-end">
+          <Button
+            onClick={console.log("Submit Form1")}
+            variant="contained"
+            size="large"
+            className={classes.customBTN}
+          >
+            Next
+          </Button>
+        </Grid>
+
         </Grid>
         </AccordionDetails>
         </Accordion>
         </Grid>
 
         <Grid item xs={12} md={12}>
-        <Accordion>
+        <Accordion disabled={formData.page2 === null}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           className={classes.formWide}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant={"h6"} className={classes.heading}>{"Food"}</Typography>
+          <Typography variant={"h6"} className={classes.heading}>{"2. Food"}</Typography>
         </AccordionSummary>
         <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
         <Grid container spacing={3}>
@@ -1589,22 +1581,38 @@ export default function BacteriaNew() {
             })}
           </Paper>
         </Grid>
+        <Grid item xs={12} md={12} container justify="flex-end">
+              <Button
+                
+                variant="contained"
+                size="large"
+                className={classes.customBTN}
+              >
+                Back
+              </Button>
+              <Button
+                
+                variant="contained"
+                size="large"
+                className={classes.customBTN}
+              >
+                Next
+              </Button>
+          </Grid>
         </Grid>
         </AccordionDetails>
-        </Accordion>
-        
-        
+        </Accordion>      
         </Grid>
 
         <Grid item xs={12} md={12}>
-        <Accordion>
+        <Accordion disabled={formData.page3 === null}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           className={classes.formWide}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant={"h6"} className={classes.heading}>{"Results"}</Typography>
+          <Typography variant={"h6"} className={classes.heading}>{"3. Results"}</Typography>
         </AccordionSummary>
         <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
         <Grid container spacing={3}>
@@ -1725,9 +1733,6 @@ export default function BacteriaNew() {
         : null}
           
         </Grid>
-        </AccordionDetails>
-        </Accordion>        
-        </Grid>
 
         <Grid item xs={12} md={12} container justify="flex-end">
               <Button
@@ -1736,9 +1741,20 @@ export default function BacteriaNew() {
                 size="large"
                 className={classes.customBTN}
               >
+                Back
+              </Button>
+              <Button
+                onClick={() => formRef.current.submitForm()}
+                variant="contained"
+                size="large"
+                className={classes.customBTN}
+              >
                 Register
               </Button>
-            </Grid>
+          </Grid>
+        </AccordionDetails>
+        </Accordion>        
+        </Grid>
       </Grid>
       </Form>
       {/*
