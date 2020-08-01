@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.js": "/PathogensInFood/static/js/main.d9e1e742.chunk.js",
-    "main.js.map": "/PathogensInFood/static/js/main.d9e1e742.chunk.js.map",
+    "main.js": "/PathogensInFood/static/js/main.33c14b7b.chunk.js",
+    "main.js.map": "/PathogensInFood/static/js/main.33c14b7b.chunk.js.map",
     "runtime-main.js": "/PathogensInFood/static/js/runtime-main.48c3daed.js",
     "runtime-main.js.map": "/PathogensInFood/static/js/runtime-main.48c3daed.js.map",
-    "static/js/2.1bcafa62.chunk.js": "/PathogensInFood/static/js/2.1bcafa62.chunk.js",
-    "static/js/2.1bcafa62.chunk.js.map": "/PathogensInFood/static/js/2.1bcafa62.chunk.js.map",
+    "static/js/2.6aa4b3cf.chunk.js": "/PathogensInFood/static/js/2.6aa4b3cf.chunk.js",
+    "static/js/2.6aa4b3cf.chunk.js.map": "/PathogensInFood/static/js/2.6aa4b3cf.chunk.js.map",
     "index.html": "/PathogensInFood/index.html",
-    "precache-manifest.be937e9e4890dfb692e5d7aa9b46e529.js": "/PathogensInFood/precache-manifest.be937e9e4890dfb692e5d7aa9b46e529.js",
+    "precache-manifest.840c16c9ddee41193867b41cd477ba00.js": "/PathogensInFood/precache-manifest.840c16c9ddee41193867b41cd477ba00.js",
     "service-worker.js": "/PathogensInFood/service-worker.js",
-    "static/js/2.1bcafa62.chunk.js.LICENSE.txt": "/PathogensInFood/static/js/2.1bcafa62.chunk.js.LICENSE.txt",
+    "static/js/2.6aa4b3cf.chunk.js.LICENSE.txt": "/PathogensInFood/static/js/2.6aa4b3cf.chunk.js.LICENSE.txt",
     "static/media/bacteria.8f08db80.svg": "/PathogensInFood/static/media/bacteria.8f08db80.svg",
     "static/media/cimo_bg_menu2.jpg": "/PathogensInFood/static/media/cimo_bg_menu2.7204ad86.jpg",
     "static/media/cimo_logo.svg": "/PathogensInFood/static/media/cimo_logo.aa9dbbc8.svg",
@@ -20,7 +20,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.48c3daed.js",
-    "static/js/2.1bcafa62.chunk.js",
-    "static/js/main.d9e1e742.chunk.js"
+    "static/js/2.6aa4b3cf.chunk.js",
+    "static/js/main.33c14b7b.chunk.js"
   ]
 }
