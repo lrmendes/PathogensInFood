@@ -1,10 +1,4 @@
 {
-    "confirmation": {
-        "yes": null,
-        "no": null,
-        "NA": null
-    },
-    "nsamples": null,
     "packaged_status": {
         "packed": null,
         "unpacked": null
@@ -26,8 +20,5 @@
     "RTE": {
         "yes": null,
         "no": null
-    },
-    "bias_potential": null,
-    "reason": null,
-    "comments": null
+    }
 }

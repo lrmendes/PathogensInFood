@@ -1,0 +1,38 @@
+{
+    "sample_w_unit": {
+        "data": ["g","ml","cm²","unit"],
+        "label": "Sample W Unit",
+        "type": "list",
+        "required": true
+    },
+    "nsamples": {
+        "data": null,
+        "label": "N Samples",
+        "type": "number",
+        "required": true
+    },
+    "confirmation": {
+        "data": ["yes","no","NA"],
+        "label": "Confirmation",
+        "type": "list",
+        "required": true
+    },
+    "bias_potential": {
+        "data": ["0","1"],
+        "label": "Bias Potencial",
+        "type": "list",
+        "required": true
+    },
+    "reason": {
+        "data": null,
+        "label": "Reason",
+        "type": "text",
+        "required": false
+    },
+    "comments": {
+        "data": null,
+        "label": "Comments",
+        "type": "text",
+        "required": false
+    }
+}

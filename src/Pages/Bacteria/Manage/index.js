@@ -41,6 +41,7 @@ import json_general_info from "../../../Json/Bacteria/general_info.json";
 //import json_agent_prevalence from '../../../Json/Bacteria/agent_prevalence_tree.json';
 import json_foods from "../../../Json/Bacteria/foodclass_tree.json";
 import json_agent from "../../../Json/Bacteria/agent_tree.json";
+import json_general_results from "../../../Json/Bacteria/general_results.json";
 
 import json_general_prevalence from "../../../Json/Bacteria/prevalence_data_tree.json";
 import json_general_count from "../../../Json/Bacteria/count_data_tree.json";
@@ -93,6 +94,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BacteriaNew() {
   const blank_text = Texts.leave_blank;
+  const required_text = Texts.required;
   const blank_text_error = Texts.blank_error;
   const formRef = useRef(null);
 
@@ -115,6 +117,9 @@ export default function BacteriaNew() {
   const [dataPrevalenceGeneralInfo, setDataPrevalenceGeneralInfo] = useState(
     {}
   );
+
+  // Tree & State of RESULTS GENERAL
+  const jsonResultsGeneral = json_general_results;
 
   // Tree & State of COUNT GENERAL
   const jsonCountGeneralInfo = json_general_count;
@@ -162,11 +167,14 @@ export default function BacteriaNew() {
     }
   };
 
-  async function handleSubmit(data, { reset }) {
-
+  async function handleSubmit(data, { reset }, event) {
     //console.log(Yup.object());
+    //event.preventDefault();
+    //event.stopPropagation();
+    //event.nativeEvent.stopImmediatePropagation();
+
     console.log(data);
-    
+
     let resErrors = {}
     Object.keys(data).map((value,index) => {
         //console.log(value,"->",formRef.current.getFieldRef(value));
@@ -178,17 +186,36 @@ export default function BacteriaNew() {
         //console.log(value," -> ",isTextField);
 
         if (typeof isTextField != 'boolean') {
+          if (data[value] === "") {
+            formRef.current.setFieldError(value, true);
+            resErrors[value] = Yup.string().required();
+          } else {
+            formRef.current.setFieldError(value, false);
+            //console.log(formRef.current);
+          }
+        } else {
+          if (data[value] === "") {
+            if (formRef.current.getFieldRef(value).required) {
+              formRef.current.setFieldError(value, true);
+              resErrors[value] = Yup.string().required();
+            }
+          } else {
+            formRef.current.setFieldError(value, false);
+            //console.log(formRef.current);
+          }
+        }
+        
+
+       /* if (typeof isTextField != 'boolean') {
           if (data[value] == "") {
             formRef.current.setFieldError(value, true);
             resErrors[value] = Yup.string().required();
-            
           } else {
             formRef.current.setFieldError(value, false);
+            //console.log(formRef.current);
           }
         } else {
-          //console.log("Nao é Dropdown: ",value);
-          //console.log(typeof isTextField)
-        }
+        }*/
     });
   }
 
@@ -1582,41 +1609,79 @@ export default function BacteriaNew() {
         <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
         <Grid container spacing={3}>
         
+        
+          <Grid item xs={12} md={12}>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>General Results</Typography>
+            <Divider />
+            <Paper className={fixedHeightPaper}>
+            { 
+                Object.entries(jsonResultsGeneral).map(([key, value]) => {
+                  return value.data == null 
+                  ?
+                <MaterialInput
+                  key={key}
+                  name={key}
+                  label={value.label + (value.required ? required_text : blank_text)}
+                  type={value.type || "text"}
+                  isrequired={value.required}
+                  labelError={blank_text_error}
+                  placeholder={"enter text..."}
+                />
+                :
+                <MaterialNativeSelect
+                key={key}
+                label={value.label + (value.required ? required_text : blank_text)}
+                defaultValue={""}
+                labelError={blank_text_error}
+                name={key}
+                >
+                <option value={""}>Select</option >
+                {value.data.map((dataValue) =>
+                    <option key={dataValue} value={dataValue}>
+                      {dataValue}
+                    </option >
+                )}
+                </MaterialNativeSelect>
+            })}
+            </Paper>
+          </Grid>
+        
         { essayType == 2 || essayType == 0 ?
         <Grid item xs={12} md={12}>
               <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Prevalence Results</Typography>
               <Divider />
               <Paper className={fixedHeightPaper}>
               { 
-                  (Object.keys(jsonPrevalenceGeneralInfo).map((json, index) => {
-                    return (jsonPrevalenceGeneralInfo[json] == null 
-                      ? 
-                      <MaterialInput
-                        key={json}
-                        name={json}
-                        label={json+blank_text}
-                        labelError={blank_text_error}
-                        placeholder={"enter text..."}
-                      />
-                      :
-                      <MaterialNativeSelect
-                      key={json}
-                      label={json}
-                      defaultValue={""}
-                      labelError={blank_text_error}
-                      name={json}
-                      >
-                      <option value={""}>Select</option >
-                      {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                        key != "label" && key != "selected" ? (
-                          <option key={key} value={key}>
-                            {key}
-                          </option >
-                        ) : null
-                      )}
-                      </MaterialNativeSelect>
-                  )}))
-            }
+                  Object.entries(jsonPrevalenceGeneralInfo).map(([key, value]) => {
+                    return value.data == null 
+                    ?
+                  <MaterialInput
+                    key={key}
+                    name={key}
+                    label={value.label + (value.required ? required_text : blank_text)}
+                    type={value.type || "text"}
+                    isrequired={value.required}
+                    labelError={blank_text_error}
+                    placeholder={"enter text..."}
+                  />
+                  :
+                  <MaterialNativeSelect
+                  key={key}
+                  label={value.label + (value.required ? required_text : blank_text)}
+                  defaultValue={""}
+                  labelError={blank_text_error}
+                  name={key}
+                  >
+                  <option value={""}>Select</option >
+                  {value.data.map((dataValue) =>
+                    dataValue != "label" && dataValue != "selected" ? (
+                      <option key={dataValue} value={dataValue}>
+                        {dataValue}
+                      </option >
+                    ) : null
+                  )}
+                  </MaterialNativeSelect>
+              })}
               </Paper>
             </Grid>
         : null}
@@ -1666,7 +1731,7 @@ export default function BacteriaNew() {
 
         <Grid item xs={12} md={12} container justify="flex-end">
               <Button
-                type="submit"
+                onClick={() => formRef.current.submitForm()}
                 variant="contained"
                 size="large"
                 className={classes.customBTN}

@@ -14,9 +14,16 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(0.5),
       marginBottom: theme.spacing(1),
     },
+    inputTextError: {
+      marginTop: theme.spacing(0.5),
+    },
+    labelTextError: {
+      marginBottom: theme.spacing(1),
+      color: "#f00",
+    }
   }));
 
-export default function MaterialInput({ name, label, placeholder, labelError, ...rest }) {
+export default function MaterialInput({ name, label, placeholder, labelError, isrequired = true, ...rest }) {
   const inputRef = useRef(null);
   const classes = useStyles();
 
@@ -33,21 +40,21 @@ export default function MaterialInput({ name, label, placeholder, labelError, ..
     <>
       {label && <label className={classes.inputLabel} htmlFor={fieldName}>{label}</label>}
       <TextField
-        error={error ? true : false}
         inputRef={inputRef}
         id={fieldName}
         defaultValue={defaultValue}
-        className={classes.inputText}
+        className={error ? classes.inputTextError : classes.inputText}
         placeholder={placeholder}
         inputProps={{
           style: {
             padding: 10
-          }
+          },
+          required: isrequired,
        }}
        variant={"outlined"}
         {...rest}
       />
-      {error && <span style={{ color: "#f00" }}>{labelError}</span>}
+      {error && <span className={classes.labelTextError}>{labelError}</span>}
     </>
   );
 }
