@@ -39,7 +39,7 @@ import CustomSelect from "../../../Components/Selects/CustomSelect";
 import CustomAutoComplete from "../../../Components/Selects/CustomAutoComplete";
 
 //import json_agent_count from '../../../Json/Bacteria/agent_count_tree.json';
-import json_general_info from "../../../Json/Bacteria/general_info.json";
+import json_general_info from "../../../Json/Bacteria/food_characteristics.json";
 //import json_agent_prevalence from '../../../Json/Bacteria/agent_prevalence_tree.json';
 import json_foods from "../../../Json/Bacteria/foodclass_tree.json";
 import json_agent from "../../../Json/Bacteria/agent_tree.json";

@@ -11,11 +11,6 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
-
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-
 import {
   TextField,
   RadioGroup,
@@ -28,19 +23,28 @@ import { Autocomplete } from "@material-ui/lab";
 import { Scope } from "@unform/core";
 import { Form } from "@unform/web";
 
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 import MaterialInput from "../../../Components/Inputs/MaterialInput";
 //import MaterialSelect from "../../../Components/Selects/MaterialSelect";
 import MaterialNativeSelect from "../../../Components/Selects/MaterialNativeSelect";
+
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 import CustomSelect from "../../../Components/Selects/CustomSelect";
 
 import CustomAutoComplete from "../../../Components/Selects/CustomAutoComplete";
 
 //import json_agent_count from '../../../Json/Bacteria/agent_count_tree.json';
-import json_general_info from "../../../Json/Bacteria/general_info.json";
+import json_general_info from "../../../Json/Bacteria/food_characteristics.json";
 //import json_agent_prevalence from '../../../Json/Bacteria/agent_prevalence_tree.json';
 import json_foods from "../../../Json/Bacteria/foodclass_tree.json";
 import json_agent from "../../../Json/Bacteria/agent_tree.json";
+import json_general_results from "../../../Json/Bacteria/general_results.json";
 
 import json_general_prevalence from "../../../Json/Bacteria/prevalence_data_tree.json";
 import json_general_count from "../../../Json/Bacteria/count_data_tree.json";
@@ -50,12 +54,6 @@ import Texts from "../../../Styles/Texts";
 
 import * as Yup from 'yup';
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
@@ -63,6 +61,19 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
     flexDirection: "column",
     backgroundColor: Colors.grayUltraLight,
+  },
+  dividerHeader: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  disabledHeader: {
+    backgroundColor: Colors.grayMedium,
+  },
+  expandedHeader: {
+    
+  },
+  doneStepIcon: {
+    color: Colors.primaryDarkHigh
   },
   selectEmpty: {
     textAlign: "left",
@@ -82,23 +93,15 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   customBTNBack: {
-      backgroundColor: Colors.grayDark,
-      color: Colors.white,
-      marginRight: theme.spacing(1),
-      minWidth: "100px",
-      "&:hover": {
-        backgroundColor: Colors.grayHigh,
-      },
-  },
-  customBTN: {
-    backgroundColor: Colors.secondaryDark,
+    backgroundColor: Colors.grayDark,
     color: Colors.white,
-    minWidth: "200px",
+    marginRight: theme.spacing(1),
+    minWidth: "100px",
     "&:hover": {
-      backgroundColor: Colors.secondaryUltraDark,
+      backgroundColor: Colors.grayHigh,
     },
   },
-  customBTNRegContinue: {
+  customBTNNextRegister: {
     backgroundColor: Colors.secondaryDark,
     color: Colors.white,
     marginRight: theme.spacing(1),
@@ -110,28 +113,33 @@ const useStyles = makeStyles((theme) => ({
   formWide: {
     width: "100%",
   },
-  backButton: {
-    marginRight: theme.spacing(1),
-  },
-  instructions: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+  heading: {
+    fontWeight: "bold",
   },
 }));
 
 export default function BacteriaNew() {
   const blank_text = Texts.leave_blank;
+  const required_text = Texts.required;
   const blank_text_error = Texts.blank_error;
+
+  const form1Ref = useRef(null);
+  const form2Ref = useRef(null);
+  const form3Ref = useRef(null);
+
   const formRef = useRef(null);
 
-  const [formStep1,setFormStep1] = useState(null);
-  const [formStep2,setFormStep2] = useState(null);
-
   const classes = useStyles();
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  const [activeStep, setActiveStep] = useState(0);
-  const steps = getSteps();
+  const [formData,setFormData] = useState({
+    form1: null,
+    form2: null,
+    form3: null
+  })
+
+  const [formExpanded, setFormExpanded] = useState(1); // 1: Form1 ; 2: Form2 ; 3: Form3
 
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -146,7 +154,12 @@ export default function BacteriaNew() {
 
   // Tree & State of PREVALENCE GENERAL
   const jsonPrevalenceGeneralInfo = json_general_prevalence;
-  const [dataPrevalenceGeneralInfo, setDataPrevalenceGeneralInfo] = useState({});
+  const [dataPrevalenceGeneralInfo, setDataPrevalenceGeneralInfo] = useState(
+    {}
+  );
+
+  // Tree & State of RESULTS GENERAL
+  const jsonResultsGeneral = json_general_results;
 
   // Tree & State of COUNT GENERAL
   const jsonCountGeneralInfo = json_general_count;
@@ -172,20 +185,6 @@ export default function BacteriaNew() {
   const jsonGeneralInfo = json_general_info;
   const [dataGeneralInfo, setDataGeneralInfo] = useState({});
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   const handleAgent = (event) => {
     if (event == "null" || event == "") {
       setEssayType(-1);
@@ -207,15 +206,103 @@ export default function BacteriaNew() {
       setSelectedAgent(event);
     }
   };
+  
+  async function handleSubmitForm1(data, { reset }, event) {
+    console.log(data);
 
-  async function handleSubmitStep1(data, { reset }) {
-
-    //console.log(Yup.object());
-    //console.log(data);
-    
     let resErrors = {}
-    let isValidForm = true;
+    let haveErrors = false;
+    Object.keys(data).map((value,index) => {
+        let isTextField = form1Ref.current.getFieldRef(value).current || form1Ref.current.getFieldRef(value).props || true;
 
+        if (typeof isTextField != 'boolean') {
+          if (data[value] === "") {
+            form1Ref.current.setFieldError(value, true);
+            haveErrors = true;
+            resErrors[value] = Yup.string().required();
+          } else {
+            form1Ref.current.setFieldError(value, false);
+          }
+        } else {
+          if (data[value] === "") {
+            if (form1Ref.current.getFieldRef(value).required) {
+              form1Ref.current.setFieldError(value, true);
+              haveErrors = true;
+              resErrors[value] = Yup.string().required();
+            }
+          } else {
+            form1Ref.current.setFieldError(value, false);
+          }
+        }
+    });
+
+    if (!haveErrors) {
+      // Set Form1 Data
+      setFormData({...formData, form1: data });
+      // Open Form2
+      setFormExpanded(2);
+    }
+  }
+
+  async function handleSubmitForm2(data, { reset }, event) {
+    console.log(data);
+
+    let resErrors = {}
+    let haveErrors = false;
+    Object.keys(data).map((value,index) => {
+        let isTextField = form2Ref.current.getFieldRef(value).current || form2Ref.current.getFieldRef(value).props || true;
+
+        if (typeof isTextField != 'boolean') {
+          if (data[value] === "") {
+            form2Ref.current.setFieldError(value, true);
+            haveErrors = true;
+            resErrors[value] = Yup.string().required();
+          } else {
+            form2Ref.current.setFieldError(value, false);
+          }
+        } else {
+          if (data[value] === "") {
+            if (form2Ref.current.getFieldRef(value).required) {
+              form2Ref.current.setFieldError(value, true);
+              haveErrors = true;
+              resErrors[value] = Yup.string().required();
+            }
+          } else {
+            form2Ref.current.setFieldError(value, false);
+          }
+        }
+    });
+
+    if (!haveErrors) {
+      // Set Form1 Data
+      setFormData({...formData, form2: data });
+      // Open Form2
+      setFormExpanded(3);
+    }
+  }
+
+  const handleBackForm2 = () => {
+    setFormData({...formData, form1: null, form2: null });
+    // Open Form2
+    setFormExpanded(1);
+  }
+
+  const handleBackForm3 = () => {
+    setFormData({...formData, form2: null, form3: null });
+    // Open Form2
+    setFormExpanded(2);
+  }
+  
+
+  async function handleSubmit(data, { reset }, event) {
+    //console.log(Yup.object());
+    //event.preventDefault();
+    //event.stopPropagation();
+    //event.nativeEvent.stopImmediatePropagation();
+
+    console.log(data);
+
+    let resErrors = {}
     Object.keys(data).map((value,index) => {
         //console.log(value,"->",formRef.current.getFieldRef(value));
         //console.log(typeof formRef.current.getFieldRef(value));
@@ -226,130 +313,37 @@ export default function BacteriaNew() {
         //console.log(value," -> ",isTextField);
 
         if (typeof isTextField != 'boolean') {
-          if (data[value] == "") {
+          if (data[value] === "") {
             formRef.current.setFieldError(value, true);
             resErrors[value] = Yup.string().required();
-            isValidForm = false;
           } else {
             formRef.current.setFieldError(value, false);
+            //console.log(formRef.current);
           }
         } else {
-          //console.log("Nao é Dropdown: ",value);
-          //console.log(typeof isTextField)
-        }
-    });
-
-    let essay = "prevalence";
-    if (essayType == 1) {
-      essay = "count";
-    } else if (essayType == 2) {
-      essay = "both";
-    }
-
-    if (isValidForm) {
-      setFormStep1(data);
-      setFormStep1({...data, "essay": essay})
-
-      Object.keys(data).map((value,index) => {
-        formRef.current.clearField(value);
-        //console.log(formRef.current.getFieldRef(value));
-
-        let isNativeSelect = formRef.current.getFieldRef(value).current || true;
-        let isAutoComplete = formRef.current.getFieldRef(value).props || true;
-
-        if (typeof isNativeSelect != 'boolean') {
-          //console.log("NativeSelect");
-          formRef.current.getFieldRef(value)['current']['value'] = "";
-        }
-
-        if (typeof isAutoComplete != 'boolean') {
-          //console.log("AutoCompelte");
-          formRef.current.getFieldRef(value)['state']['value'] = "";
+          if (data[value] === "") {
+            if (formRef.current.getFieldRef(value).required) {
+              formRef.current.setFieldError(value, true);
+              resErrors[value] = Yup.string().required();
+            }
+          } else {
+            formRef.current.setFieldError(value, false);
+            //console.log(formRef.current);
+          }
         }
         
-      });
 
-      reset();
-
-       // Force Reset All Step1 Form
-       setSelectedStudy(null);
-      setEssayType(-1);
-      setSelectedAgent(null);
-      setJsonEssayPrevalence(null);
-      setDataPrevalenceEssay(null);
-      setDataAuxEssayPrevalence([jsonEssayPrevalence]);
-      setJsonEssayCount(null);
-      setDataCountEssay(null);
-      setDataAuxEssayCount([jsonEssayCount]);  
-      handleNext();
-    }
-  }
-
-  async function handleSubmitStep2(data, { reset }) {
-
-    //console.log(Yup.object());
-    //console.log(data);
-
-    let isValidForm = true;
-    let resErrors = {}
-    Object.keys(data).map((value,index) => {
-        //console.log(value,"->",formRef.current.getFieldRef(value));
-        //console.log(typeof formRef.current.getFieldRef(value));
-        //console.log(value,"->",);
-        //console.log("-----");
-
-        let isTextField = formRef.current.getFieldRef(value).current || formRef.current.getFieldRef(value).props || true;
-        //console.log(value," -> ",isTextField);
-
-        if (typeof isTextField != 'boolean') {
+       /* if (typeof isTextField != 'boolean') {
           if (data[value] == "") {
             formRef.current.setFieldError(value, true);
             resErrors[value] = Yup.string().required();
-            isValidForm = false;
           } else {
             formRef.current.setFieldError(value, false);
+            //console.log(formRef.current);
           }
         } else {
-          //console.log("Nao é Dropdown: ",value);
-          //console.log(typeof isTextField)
-        }
-  });
-
-  if (isValidForm) {
-    setFormStep2(data);
-    console.log("Step1:",formStep1);
-    console.log("Step2:",data);
-
-    reset();
-
-    Object.keys(data).map((value,index) => {
-      formRef.current.clearField(value);
-      //console.log(formRef.current.getFieldRef(value));
-
-      let isNativeSelect = formRef.current.getFieldRef(value).current || true;
-      let isAutoComplete = formRef.current.getFieldRef(value).props || true;
-
-      if (typeof isNativeSelect != 'boolean') {
-        //console.log("NativeSelect");
-        formRef.current.getFieldRef(value)['current']['value'] = "";
-      }
-
-      if (typeof isAutoComplete != 'boolean') {
-        //console.log("AutoCompelte");
-        formRef.current.getFieldRef(value)['state']['value'] = "";
-      }
-      
+        }*/
     });
-    
-    // Force Reset All Step2 Form
-    setData(null);
-    setDataAux([jsonFoods]);
-    setSelectedCountry(null);
-    setDataCountGeneralInfo({});
-    setDataGeneralInfo({});
-    setDataPrevalenceGeneralInfo({});
-    setDialogOpen(true);
-  }
   }
 
   const handleChange = (label, index, event) => {
@@ -525,6 +519,656 @@ export default function BacteriaNew() {
   };
 
   const jsonstudies = [
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
+    "Abay_AUVFD_2012",
+    "Abay_LWTFST_2017",
+    "Abrahim_JAFPT_2010",
+    "Agren_PVM_2016",
+    "Aguado_JFP_2001",
+    "Akineden_IJFM_2008",
+    "Akpolat_VRC_2004",
+    "Alessandria_IJFM_2010",
+    "Alexopoulos_Anaerobe_2011",
+    "Beaufort_LAM_2007",
+    "Bolocan_JFP_2015",
+    "Cetinkaya_JFS_2014",
+    "Ceylan_JFQ_2008",
     "Abay_AUVFD_2012",
     "Abay_LWTFST_2017",
     "Abrahim_JAFPT_2010",
@@ -817,15 +1461,25 @@ export default function BacteriaNew() {
     setData(null);
   };
 
-  function getSteps() {
-    return ['Study, Agent & Essay', 'Food & Results'];
-  }
-  
-  function getStepContent(stepIndex) {
-    switch (stepIndex) {
-      case 0:
-        return (
-        <Form ref={formRef} className={classes.formWide} onSubmit={handleSubmitStep1}>
+  return (
+      <Grid container spacing={3}>
+      <Grid item xs={12} md={12}>
+      <Grid container spacing={3}>
+      <Grid item xs={12} md={12}>
+      <Accordion defaultExpanded={true} expanded={formExpanded === 1} className={formExpanded === 1 ? classes.expandedHeader : classes.disabledHeader}>
+        <AccordionSummary
+          className={classes.formWide}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+        <Grid container alignItems="center">
+            {formData.form1 === null ? <RadioButtonUncheckedIcon/> : <CheckCircleIcon className={classes.doneStepIcon}/> }
+            <Divider className={classes.dividerHeader} orientation="vertical" />
+            <Typography variant={"h6"} className={classes.heading}>{"1. Study, Agent & Essay"}</Typography>
+        </Grid>
+        </AccordionSummary>
+        <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
+        <Form ref={form1Ref} className={classes.formWide} onSubmit={handleSubmitForm1}>
         <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Study Info</Typography>
@@ -841,7 +1495,6 @@ export default function BacteriaNew() {
           />
           </Paper>
         </Grid>
-       
         <Grid item xs={12} md={12}>
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Agent Info</Typography>
                 <Divider />
@@ -874,7 +1527,6 @@ export default function BacteriaNew() {
                 : null}
                 </Paper>
               </Grid>
-        
         { essayType == 2 || essayType == 0 ?
         <Grid item xs={12} md={12}>
               <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Essay Prevalence</Typography>
@@ -934,112 +1586,252 @@ export default function BacteriaNew() {
         </Paper>
         </Grid>
         : null}
-        
+
         <Grid item xs={12} md={12} container justify="flex-end">
         <Button
-          type="submit"
-          variant="contained"
-          size="large"
-          type="submit"
-          className={classes.customBTNRegContinue}
-        >
-          {"Next"} 
+            onClick={() => form1Ref.current.submitForm()}
+            variant="contained"
+            size="large"
+            className={classes.customBTNNextRegister}
+          >
+            Next
         </Button>
         </Grid>
+
         </Grid>
         </Form>
-        );
-      case 1:
-        return (
-        <Form ref={formRef} className={classes.formWide} onSubmit={handleSubmitStep2}>
+
+        </AccordionDetails>
+        </Accordion>
+        </Grid>
+
+        <Grid item xs={12} md={12}>
+        <Accordion expanded={formExpanded === 2} className={formExpanded === 2 ? classes.expandedHeader : classes.disabledHeader}>
+        <AccordionSummary
+          className={classes.formWide}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Grid container alignItems="center">
+            {formData.form2 === null ? <RadioButtonUncheckedIcon/> : <CheckCircleIcon className={classes.doneStepIcon}/> }
+            <Divider className={classes.dividerHeader} orientation="vertical" />
+            <Typography variant={"h6"} className={classes.heading}>{"2. Food"}</Typography>
+          </Grid>
+        </AccordionSummary>
+        <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
+        <Form ref={form2Ref} className={classes.formWide} onSubmit={handleSubmitForm2}>
         <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              className={classes.title}
-            >
-              Food Info
-            </Typography>
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            className={classes.title}
+          >
+            Food Info
+          </Typography>
+          <Divider />
+          <Paper className={fixedHeightPaper}>
+            <CustomSelect
+              label={"Food Origin"}
+              defaultValue={""}
+              name={"food_origin"}
+              items={jsonCountries}
+              labelError={blank_text_error}
+              clearable={true}
+            />
+            { 
+                (dataAux.map((json,index) => {
+                  return (
+                  <MaterialNativeSelect
+                    key={json.label}
+                    label={json.label}
+                    labelError={blank_text_error}
+                    onChange={(event) => handleChange(json.label,index,event.target.value)}
+                    name={json.label}
+                  >
+                    <option value={""}>Select</option >
+                    {Object.keys(json).map(key => 
+                      key != "label" && key != "selected" ? (
+                        <option key={key} value={key}>
+                          {key}
+                        </option >
+                      ) : null
+                    )}
+                  </MaterialNativeSelect>
+                )}))
+            }
+            {/*<Button onClick={clearData}>Clear Data</Button>*/}
+          </Paper>
+        </Grid>
+          
+        <Grid item xs={12} md={12}>
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            className={classes.title}
+          >
+            Food Characteristics
+          </Typography>
+          <Divider />
+          {/*console.log("RODOU")*/}
+          <Paper className={fixedHeightPaper}>
+          { 
+                Object.entries(jsonGeneralInfo).map(([key, value]) => {
+                  return value.data == null 
+                  ?
+                <MaterialInput
+                  key={key}
+                  name={key}
+                  label={value.label + (value.required ? required_text : blank_text)}
+                  type={value.type || "text"}
+                  isrequired={value.required}
+                  labelError={blank_text_error}
+                  placeholder={"enter text..."}
+                />
+                :
+                <MaterialNativeSelect
+                key={key}
+                label={value.label + (value.required ? required_text : blank_text)}
+                defaultValue={""}
+                labelError={blank_text_error}
+                name={key}
+                >
+                <option value={""}>Select</option >
+                {value.data.map((dataValue) =>
+                    <option key={dataValue} value={dataValue}>
+                      {dataValue}
+                    </option >
+                )}
+                </MaterialNativeSelect>
+            })}
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={12} container justify="flex-end">
+              <Button
+                onClick={() => handleBackForm2()}
+                variant="contained"
+                size="large"
+                className={classes.customBTNBack}
+              >
+                Back
+              </Button>
+              <Button
+                onClick={() => form2Ref.current.submitForm()}
+                variant="contained"
+                size="large"
+                className={classes.customBTNNextRegister}
+              >
+                Next
+              </Button>
+          </Grid>
+        </Grid>
+        </Form>
+        </AccordionDetails>
+        </Accordion>      
+        </Grid>
+
+        <Grid item xs={12} md={12}>
+        <Accordion expanded={formExpanded === 3} className={formExpanded === 3 ? classes.expandedHeader : classes.disabledHeader}>
+        <AccordionSummary
+          className={classes.formWide}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Grid container alignItems="center">
+            {formData.form3 === null ? <RadioButtonUncheckedIcon/> : <CheckCircleIcon className={classes.doneStepIcon}/> }
+            <Divider className={classes.dividerHeader} orientation="vertical" />
+            <Typography variant={"h6"} className={classes.heading}>{"3. Results"}</Typography>
+          </Grid>
+        </AccordionSummary>
+        <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
+        <Form ref={form3Ref} className={classes.formWide} onSubmit={handleSubmit}>
+
+        <Grid container spacing={3}>
+        
+        
+          <Grid item xs={12} md={12}>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>General Results</Typography>
             <Divider />
             <Paper className={fixedHeightPaper}>
-              <CustomSelect
-                label={"Food Origin"}
+            { 
+                Object.entries(jsonResultsGeneral).map(([key, value]) => {
+                  return value.data == null 
+                  ?
+                <MaterialInput
+                  key={key}
+                  name={key}
+                  label={value.label + (value.required ? required_text : blank_text)}
+                  type={value.type || "text"}
+                  isrequired={value.required}
+                  labelError={blank_text_error}
+                  placeholder={"enter text..."}
+                />
+                :
+                <MaterialNativeSelect
+                key={key}
+                label={value.label + (value.required ? required_text : blank_text)}
                 defaultValue={""}
-                name={"food_origin"}
-                items={jsonCountries}
                 labelError={blank_text_error}
-                clearable={true}
-              />
-              { 
-                  (dataAux.map((json,index) => {
-                    return (
-                    <MaterialNativeSelect
-                      key={json.label}
-                      label={json.label}
-                      labelError={blank_text_error}
-                      onChange={(event) => handleChange(json.label,index,event.target.value)}
-                      name={json.label}
-                    >
-                      <option value={""}>Select</option >
-                      {Object.keys(json).map(key => 
-                        key != "label" && key != "selected" ? (
-                          <option key={key} value={key}>
-                            {key}
-                          </option >
-                        ) : null
-                      )}
-                    </MaterialNativeSelect>
-                  )}))
-              }
-              {/*<Button onClick={clearData}>Clear Data</Button>*/}
-              </Paper>
-              </Grid>
-              
+                name={key}
+                >
+                <option value={""}>Select</option >
+                {value.data.map((dataValue) =>
+                    <option key={dataValue} value={dataValue}>
+                      {dataValue}
+                    </option >
+                )}
+                </MaterialNativeSelect>
+            })}
+            </Paper>
+          </Grid>
+        
         { essayType == 2 || essayType == 0 ?
         <Grid item xs={12} md={12}>
-              <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Results Prevalence</Typography>
+              <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Prevalence Results</Typography>
               <Divider />
               <Paper className={fixedHeightPaper}>
               { 
-                  (Object.keys(jsonPrevalenceGeneralInfo).map((json, index) => {
-                    return (jsonPrevalenceGeneralInfo[json] == null 
-                      ? 
-                      <MaterialInput
-                        key={json}
-                        name={json}
-                        label={json+blank_text}
-                        labelError={blank_text_error}
-                        placeholder={"enter text..."}
-                      />
-                      :
-                      <MaterialNativeSelect
-                      key={json}
-                      label={json}
-                      defaultValue={""}
-                      labelError={blank_text_error}
-                      name={json}
-                      >
-                      <option value={""}>Select</option >
-                      {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                        key != "label" && key != "selected" ? (
-                          <option key={key} value={key}>
-                            {key}
-                          </option >
-                        ) : null
-                      )}
-                      </MaterialNativeSelect>
-                  )}))
-            }
+                  Object.entries(jsonPrevalenceGeneralInfo).map(([key, value]) => {
+                    return value.data == null 
+                    ?
+                  <MaterialInput
+                    key={key}
+                    name={key}
+                    label={value.label + (value.required ? required_text : blank_text)}
+                    type={value.type || "text"}
+                    isrequired={value.required}
+                    labelError={blank_text_error}
+                    placeholder={"enter text..."}
+                  />
+                  :
+                  <MaterialNativeSelect
+                  key={key}
+                  label={value.label + (value.required ? required_text : blank_text)}
+                  defaultValue={""}
+                  labelError={blank_text_error}
+                  name={key}
+                  >
+                  <option value={""}>Select</option >
+                  {value.data.map((dataValue) =>
+                    dataValue != "label" && dataValue != "selected" ? (
+                      <option key={dataValue} value={dataValue}>
+                        {dataValue}
+                      </option >
+                    ) : null
+                  )}
+                  </MaterialNativeSelect>
+              })}
               </Paper>
             </Grid>
         : null}
-    
+
         { essayType == 2 || essayType == 1 ?
         <Grid item xs={12} md={12}>
-        <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Results Count</Typography>
+        <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Count Results</Typography>
         <Divider />
         <Paper className={fixedHeightPaper}>
         { 
@@ -1074,130 +1866,43 @@ export default function BacteriaNew() {
         </Paper>
         </Grid>
         : null}
-              
-        <Grid item xs={12} md={12}>
-                <Typography
-                  component="h1"
-                  variant="h6"
-                  color="inherit"
-                  noWrap
-                  className={classes.title}
-                >
-                  General Info
-                </Typography>
-                <Divider />
-                {/*console.log("RODOU")*/}
-                <Paper className={fixedHeightPaper}>
-                  {Object.keys(jsonGeneralInfo).map((json, index) => {
-                    return jsonGeneralInfo[json] == null ? (
-                      <MaterialInput
-                        key={json}
-                        name={json}
-                        label={json+blank_text}
-                        placeholder={"enter text..."}
-                      />
-                    ) : (
-                        <MaterialNativeSelect
-                          key={json}
-                          label={json}
-                          labelError={blank_text_error}
-                          defaultValue={""}
-                          name={json}
-                        >
-                          <option value={""}>Select</option >
-                          {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                            key != "label" && key != "selected" ? (
-                              <option key={key} value={key}>
-                                {key}
-                              </option >
-                            ) : null
-                          )}
-                        </MaterialNativeSelect>
-                      );
-                  })}
-                </Paper>
-              </Grid>
 
         <Grid item xs={12} md={12} container justify="flex-end">
-        <Button
-          onClick={handleReset}
-          variant="contained"
-          size="large"
-          className={classes.customBTNBack}
-        >
-          {"Back & Clear"} 
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          size="large"
-          type="submit"
-          className={classes.customBTNRegContinue}
-        >
-          {"Register \& Continue"} 
-        </Button>
+          <Button
+            onClick={() => handleBackForm3()}
+            variant="contained"
+            size="large"
+            className={classes.customBTN}
+          >
+            Back
+          </Button>
+          <Button
+            onClick={() => form3Ref.current.submitForm()}
+            variant="contained"
+            size="large"
+            className={classes.customBTN}
+          >
+            Register
+          </Button>
         </Grid>
+        
         </Grid>
         </Form>
-        )
-    }
-  }
 
-  return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={12}>
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-
-          </Step>
-        ))}
-      </Stepper>
+        </AccordionDetails>
+        </Accordion>        
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={12}>
-        {activeStep === steps.length ? (
-          <div>
-            <Typography className={classes.instructions}>All steps completed</Typography>
-            <Button onClick={handleReset}>Reset</Button>
-          </div>
-        ) : (
-            getStepContent(activeStep)
-        )}
-      </Grid>
-
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        scroll="paper"
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-      >
-        <DialogTitle id="scroll-dialog-title">Registered Data</DialogTitle>
-        <DialogContent dividers={true}>
-
-          {formStep1 != null ?
-          Object.keys(formStep1).map((key) => {
-          return <Typography key={"step1"+key}><b>{key}:</b> {formStep1[key] == "" ? "" : formStep1[key]}</Typography>
-          })
-          : null}
-
-          <Divider style={{marginTop: "10px", marginBottom: "10px"}} />
-          
-          {formStep2 != null ?
-          Object.keys(formStep2).map((key) => {
-          return <Typography key={"step2"+key}><b>{key}:</b> {formStep2[key] == "" ? "" : formStep2[key]}</Typography>
-          })
-          : null}
-
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)} color="primary">
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
-
+      {/*
+            {<Button onClick={() => setSave(!save)}>Save Data</Button>}
+            { save 
+            ? Object.keys(data).map(obj => <Typography>{obj}:{data[obj]}</Typography>)
+            : null}
+            { save 
+            ? Object.keys(dataPrevalenceEssay).map(obj => <Typography>{obj}:{data[obj]}</Typography>)
+            : null }
+            */}
+    </Grid>
     </Grid>
   );
 }

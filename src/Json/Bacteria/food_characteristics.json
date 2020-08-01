@@ -1,0 +1,32 @@
+{
+    "label": {
+        "data": null,
+        "label": "Label",
+        "type": "text",
+        "required": true
+    },
+    "packaged_status": {
+        "data": ["packed","unpacked"],
+        "label": "Packaged Status",
+        "type": "list",
+        "required": true
+    },
+    "stage": {
+        "data": ["end_processing","farm","mid_processing","restauration","retail"],
+        "label": "Stage",
+        "type": "list",
+        "required": true
+    },
+    "temp_retail": {
+        "data": ["ambiente","chill","frozen","various"],
+        "label": "Stage",
+        "type": "list",
+        "required": true
+    },
+    "RTE": {
+        "data": ["yes","no"],
+        "label": "RTE",
+        "type": "list",
+        "required": true
+    }
+}

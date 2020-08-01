@@ -33,13 +33,14 @@ import MaterialInput from "../../../Components/Inputs/MaterialInput";
 import MaterialNativeSelect from "../../../Components/Selects/MaterialNativeSelect";
 
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 import CustomSelect from "../../../Components/Selects/CustomSelect";
 
 import CustomAutoComplete from "../../../Components/Selects/CustomAutoComplete";
 
 //import json_agent_count from '../../../Json/Bacteria/agent_count_tree.json';
-import json_general_info from "../../../Json/Bacteria/general_info.json";
+import json_general_info from "../../../Json/Bacteria/food_characteristics.json";
 //import json_agent_prevalence from '../../../Json/Bacteria/agent_prevalence_tree.json';
 import json_foods from "../../../Json/Bacteria/foodclass_tree.json";
 import json_agent from "../../../Json/Bacteria/agent_tree.json";
@@ -61,6 +62,19 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     backgroundColor: Colors.grayUltraLight,
   },
+  dividerHeader: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  disabledHeader: {
+    backgroundColor: Colors.grayMedium,
+  },
+  expandedHeader: {
+    
+  },
+  doneStepIcon: {
+    color: Colors.primaryDarkHigh
+  },
   selectEmpty: {
     textAlign: "left",
     marginTop: theme.spacing(0.5),
@@ -78,9 +92,19 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     marginTop: theme.spacing(1),
   },
-  customBTN: {
+  customBTNBack: {
+    backgroundColor: Colors.grayDark,
+    color: Colors.white,
+    marginRight: theme.spacing(1),
+    minWidth: "100px",
+    "&:hover": {
+      backgroundColor: Colors.grayHigh,
+    },
+  },
+  customBTNNextRegister: {
     backgroundColor: Colors.secondaryDark,
     color: Colors.white,
+    marginRight: theme.spacing(1),
     minWidth: "200px",
     "&:hover": {
       backgroundColor: Colors.secondaryUltraDark,
@@ -98,6 +122,11 @@ export default function BacteriaNew() {
   const blank_text = Texts.leave_blank;
   const required_text = Texts.required;
   const blank_text_error = Texts.blank_error;
+
+  const form1Ref = useRef(null);
+  const form2Ref = useRef(null);
+  const form3Ref = useRef(null);
+
   const formRef = useRef(null);
 
   const classes = useStyles();
@@ -105,10 +134,12 @@ export default function BacteriaNew() {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const [formData,setFormData] = useState({
-    page1: null,
-    page2: null,
-    page3: null
+    form1: null,
+    form2: null,
+    form3: null
   })
+
+  const [formExpanded, setFormExpanded] = useState(1); // 1: Form1 ; 2: Form2 ; 3: Form3
 
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -175,6 +206,93 @@ export default function BacteriaNew() {
       setSelectedAgent(event);
     }
   };
+  
+  async function handleSubmitForm1(data, { reset }, event) {
+    console.log(data);
+
+    let resErrors = {}
+    let haveErrors = false;
+    Object.keys(data).map((value,index) => {
+        let isTextField = form1Ref.current.getFieldRef(value).current || form1Ref.current.getFieldRef(value).props || true;
+
+        if (typeof isTextField != 'boolean') {
+          if (data[value] === "") {
+            form1Ref.current.setFieldError(value, true);
+            haveErrors = true;
+            resErrors[value] = Yup.string().required();
+          } else {
+            form1Ref.current.setFieldError(value, false);
+          }
+        } else {
+          if (data[value] === "") {
+            if (form1Ref.current.getFieldRef(value).required) {
+              form1Ref.current.setFieldError(value, true);
+              haveErrors = true;
+              resErrors[value] = Yup.string().required();
+            }
+          } else {
+            form1Ref.current.setFieldError(value, false);
+          }
+        }
+    });
+
+    if (!haveErrors) {
+      // Set Form1 Data
+      setFormData({...formData, form1: data });
+      // Open Form2
+      setFormExpanded(2);
+    }
+  }
+
+  async function handleSubmitForm2(data, { reset }, event) {
+    console.log(data);
+
+    let resErrors = {}
+    let haveErrors = false;
+    Object.keys(data).map((value,index) => {
+        let isTextField = form2Ref.current.getFieldRef(value).current || form2Ref.current.getFieldRef(value).props || true;
+
+        if (typeof isTextField != 'boolean') {
+          if (data[value] === "") {
+            form2Ref.current.setFieldError(value, true);
+            haveErrors = true;
+            resErrors[value] = Yup.string().required();
+          } else {
+            form2Ref.current.setFieldError(value, false);
+          }
+        } else {
+          if (data[value] === "") {
+            if (form2Ref.current.getFieldRef(value).required) {
+              form2Ref.current.setFieldError(value, true);
+              haveErrors = true;
+              resErrors[value] = Yup.string().required();
+            }
+          } else {
+            form2Ref.current.setFieldError(value, false);
+          }
+        }
+    });
+
+    if (!haveErrors) {
+      // Set Form1 Data
+      setFormData({...formData, form2: data });
+      // Open Form2
+      setFormExpanded(3);
+    }
+  }
+
+  const handleBackForm2 = () => {
+    setFormData({...formData, form1: null, form2: null });
+    // Open Form2
+    setFormExpanded(1);
+  }
+
+  const handleBackForm3 = () => {
+    setFormData({...formData, form2: null, form3: null });
+    // Open Form2
+    setFormExpanded(2);
+  }
+  
 
   async function handleSubmit(data, { reset }, event) {
     //console.log(Yup.object());
@@ -1346,19 +1464,22 @@ export default function BacteriaNew() {
   return (
       <Grid container spacing={3}>
       <Grid item xs={12} md={12}>
-      <Form ref={formRef} className={classes.formWide} onSubmit={handleSubmit}>
       <Grid container spacing={3}>
       <Grid item xs={12} md={12}>
-      <Accordion defaultExpanded={true}>
+      <Accordion defaultExpanded={true} expanded={formExpanded === 1} className={formExpanded === 1 ? classes.expandedHeader : classes.disabledHeader}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
           className={classes.formWide}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant={"h6"} className={classes.heading}>{"1. Study, Agent & Essay"}</Typography>
+        <Grid container alignItems="center">
+            {formData.form1 === null ? <RadioButtonUncheckedIcon/> : <CheckCircleIcon className={classes.doneStepIcon}/> }
+            <Divider className={classes.dividerHeader} orientation="vertical" />
+            <Typography variant={"h6"} className={classes.heading}>{"1. Study, Agent & Essay"}</Typography>
+        </Grid>
         </AccordionSummary>
         <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
+        <Form ref={form1Ref} className={classes.formWide} onSubmit={handleSubmitForm1}>
         <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Study Info</Typography>
@@ -1467,32 +1588,38 @@ export default function BacteriaNew() {
         : null}
 
         <Grid item xs={12} md={12} container justify="flex-end">
-          <Button
-            onClick={console.log("Submit Form1")}
+        <Button
+            onClick={() => form1Ref.current.submitForm()}
             variant="contained"
             size="large"
-            className={classes.customBTN}
+            className={classes.customBTNNextRegister}
           >
             Next
-          </Button>
+        </Button>
         </Grid>
 
         </Grid>
+        </Form>
+
         </AccordionDetails>
         </Accordion>
         </Grid>
 
         <Grid item xs={12} md={12}>
-        <Accordion disabled={formData.page2 === null}>
+        <Accordion expanded={formExpanded === 2} className={formExpanded === 2 ? classes.expandedHeader : classes.disabledHeader}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
           className={classes.formWide}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant={"h6"} className={classes.heading}>{"2. Food"}</Typography>
+          <Grid container alignItems="center">
+            {formData.form2 === null ? <RadioButtonUncheckedIcon/> : <CheckCircleIcon className={classes.doneStepIcon}/> }
+            <Divider className={classes.dividerHeader} orientation="vertical" />
+            <Typography variant={"h6"} className={classes.heading}>{"2. Food"}</Typography>
+          </Grid>
         </AccordionSummary>
         <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
+        <Form ref={form2Ref} className={classes.formWide} onSubmit={handleSubmitForm2}>
         <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           <Typography
@@ -1552,69 +1679,77 @@ export default function BacteriaNew() {
           <Divider />
           {/*console.log("RODOU")*/}
           <Paper className={fixedHeightPaper}>
-            {Object.keys(jsonGeneralInfo).map((json, index) => {
-              return jsonGeneralInfo[json] == null ? (
+          { 
+                Object.entries(jsonGeneralInfo).map(([key, value]) => {
+                  return value.data == null 
+                  ?
                 <MaterialInput
-                  key={json}
-                  name={json}
-                  label={json+blank_text}
+                  key={key}
+                  name={key}
+                  label={value.label + (value.required ? required_text : blank_text)}
+                  type={value.type || "text"}
+                  isrequired={value.required}
+                  labelError={blank_text_error}
                   placeholder={"enter text..."}
                 />
-              ) : (
-                  <MaterialNativeSelect
-                    key={json}
-                    label={json}
-                    labelError={blank_text_error}
-                    defaultValue={""}
-                    name={json}
-                  >
-                    <option value={""}>Select</option >
-                    {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                      key != "label" && key != "selected" ? (
-                        <option key={key} value={key}>
-                          {key}
-                        </option >
-                      ) : null
-                    )}
-                  </MaterialNativeSelect>
-                );
+                :
+                <MaterialNativeSelect
+                key={key}
+                label={value.label + (value.required ? required_text : blank_text)}
+                defaultValue={""}
+                labelError={blank_text_error}
+                name={key}
+                >
+                <option value={""}>Select</option >
+                {value.data.map((dataValue) =>
+                    <option key={dataValue} value={dataValue}>
+                      {dataValue}
+                    </option >
+                )}
+                </MaterialNativeSelect>
             })}
           </Paper>
         </Grid>
         <Grid item xs={12} md={12} container justify="flex-end">
               <Button
-                
+                onClick={() => handleBackForm2()}
                 variant="contained"
                 size="large"
-                className={classes.customBTN}
+                className={classes.customBTNBack}
               >
                 Back
               </Button>
               <Button
-                
+                onClick={() => form2Ref.current.submitForm()}
                 variant="contained"
                 size="large"
-                className={classes.customBTN}
+                className={classes.customBTNNextRegister}
               >
                 Next
               </Button>
           </Grid>
         </Grid>
+        </Form>
         </AccordionDetails>
         </Accordion>      
         </Grid>
 
         <Grid item xs={12} md={12}>
-        <Accordion disabled={formData.page3 === null}>
+        <Accordion expanded={formExpanded === 3} className={formExpanded === 3 ? classes.expandedHeader : classes.disabledHeader}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
           className={classes.formWide}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant={"h6"} className={classes.heading}>{"3. Results"}</Typography>
+          <Grid container alignItems="center">
+            {formData.form3 === null ? <RadioButtonUncheckedIcon/> : <CheckCircleIcon className={classes.doneStepIcon}/> }
+            <Divider className={classes.dividerHeader} orientation="vertical" />
+            <Typography variant={"h6"} className={classes.heading}>{"3. Results"}</Typography>
+          </Grid>
         </AccordionSummary>
         <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
+        <Form ref={form3Ref} className={classes.formWide} onSubmit={handleSubmit}>
+
         <Grid container spacing={3}>
         
         
@@ -1731,32 +1866,33 @@ export default function BacteriaNew() {
         </Paper>
         </Grid>
         : null}
-          
-        </Grid>
 
         <Grid item xs={12} md={12} container justify="flex-end">
-              <Button
-                onClick={() => formRef.current.submitForm()}
-                variant="contained"
-                size="large"
-                className={classes.customBTN}
-              >
-                Back
-              </Button>
-              <Button
-                onClick={() => formRef.current.submitForm()}
-                variant="contained"
-                size="large"
-                className={classes.customBTN}
-              >
-                Register
-              </Button>
-          </Grid>
+          <Button
+            onClick={() => handleBackForm3()}
+            variant="contained"
+            size="large"
+            className={classes.customBTN}
+          >
+            Back
+          </Button>
+          <Button
+            onClick={() => form3Ref.current.submitForm()}
+            variant="contained"
+            size="large"
+            className={classes.customBTN}
+          >
+            Register
+          </Button>
+        </Grid>
+        
+        </Grid>
+        </Form>
+
         </AccordionDetails>
         </Accordion>        
         </Grid>
       </Grid>
-      </Form>
       {/*
             {<Button onClick={() => setSave(!save)}>Save Data</Button>}
             { save 
