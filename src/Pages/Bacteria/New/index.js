@@ -10,6 +10,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 import Button from "@material-ui/core/Button";
 import {
   TextField,
@@ -124,6 +128,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export default function BacteriaNew() {
   const blank_text = Texts.leave_blank;
   const required_text = Texts.required;
@@ -144,6 +152,8 @@ export default function BacteriaNew() {
     form2: null,
     form3: null
   })
+
+  const [openSnackAlert,setOpenSnackAlert] = useState(false);
 
   const [formExpanded, setFormExpanded] = useState(1); // 1: Form1 ; 2: Form2 ; 3: Form3
 
@@ -249,6 +259,8 @@ export default function BacteriaNew() {
       setFormData({...formData, form1: data });
       // Open Form2
       setFormExpanded(2);
+    } else {
+      setOpenSnackAlert(true);
     }
   }
 
@@ -286,6 +298,8 @@ export default function BacteriaNew() {
       setFormData({...formData, form2: data });
       // Open Form2
       setFormExpanded(3);
+    } else {
+      setOpenSnackAlert(true);
     }
   }
 
@@ -324,6 +338,8 @@ export default function BacteriaNew() {
       // Open Form2
       //setFormExpanded(3);
       setDialogOpen(true);
+    } else {
+      setOpenSnackAlert(true);
     }
   }
   
@@ -925,7 +941,7 @@ export default function BacteriaNew() {
           <Divider />
           <Paper className={fixedHeightPaper}>
           <CustomSelect
-            label={"Select Study ID"}
+            label={"Select Study ID" + required_text}
             defaultValue={""}
             name={"study_id"}
             items={jsonstudies}
@@ -940,7 +956,7 @@ export default function BacteriaNew() {
                 <Paper className={fixedHeightPaper}>
                     <MaterialNativeSelect
                       name="agent"
-                      label={"Select Agent"}
+                      label={"Select Agent" + required_text}
                       labelError={blank_text_error}
                       onChange={(event) => handleAgent(event.target.value)}
                     >
@@ -957,7 +973,7 @@ export default function BacteriaNew() {
                 {selectedAgent ? 
                   <MaterialNativeSelect
                   name="essay"
-                  label={"Select Essay"}
+                  label={"Select Essay"  + required_text}
                   labelError={blank_text_error}
                   onChange={handleEssayType}
                 >
@@ -979,7 +995,7 @@ export default function BacteriaNew() {
                       return (
                         <MaterialNativeSelect
                           key={json.label}
-                          label={json.label}
+                          label={json.label  + required_text}
                           labelError={blank_text_error}
                           onChange={(event) => handleEssayPrevalence(json.label,index,event.target.value)}
                           name={json.label}
@@ -1009,7 +1025,7 @@ export default function BacteriaNew() {
                 return (
                   <MaterialNativeSelect
                     key={json.label}
-                    label={json.label}
+                    label={json.label + required_text}
                     labelError={blank_text_error}
                     onChange={(event) => handleEssayCount(json.label,index,event.target.value)}
                     name={json.label}
@@ -1076,7 +1092,7 @@ export default function BacteriaNew() {
           <Divider />
           <Paper className={fixedHeightPaper}>
             <CustomSelect
-              label={"Food Origin"}
+              label={"Food Origin" + required_text}
               defaultValue={""}
               name={"food_origin"}
               items={jsonCountries}
@@ -1088,7 +1104,7 @@ export default function BacteriaNew() {
                   return (
                   <MaterialNativeSelect
                     key={json.label}
-                    label={json.label}
+                    label={json.label + required_text}
                     labelError={blank_text_error}
                     onChange={(event) => handleChange(json.label,index,event.target.value)}
                     name={json.label}
@@ -1335,15 +1351,6 @@ export default function BacteriaNew() {
         </Accordion>        
         </Grid>
       </Grid>
-      {/*
-            {<Button onClick={() => setSave(!save)}>Save Data</Button>}
-            { save 
-            ? Object.keys(data).map(obj => <Typography>{obj}:{data[obj]}</Typography>)
-            : null}
-            { save 
-            ? Object.keys(dataPrevalenceEssay).map(obj => <Typography>{obj}:{data[obj]}</Typography>)
-            : null }
-      */}
     </Grid>
 
     <Dialog
@@ -1359,7 +1366,9 @@ export default function BacteriaNew() {
 
           {formData.form1 != null ?
           Object.keys(formData.form1).map((key) => {
-          return <Typography key={"step1"+key}><b>{key}:</b> {formData.form1[key] == "" ? "" : formData.form1[key]}</Typography>
+            return key !== "essay" 
+            ? <Typography key={"step1"+key}><b>{key}:</b> {formData.form1[key] == "" ? "" : formData.form1[key]}</Typography>
+            : <Typography key={"step1"+key}><b>{key}:</b> {formData.form1[key] === "0" ? "Prevalence" : formData.form1[key] === "1" ? "Count" : "Both" }</Typography>
           })
           : null}
 
@@ -1388,6 +1397,13 @@ export default function BacteriaNew() {
           </Button>
         </DialogActions>
       </Dialog>
+
+
+      <Snackbar open={openSnackAlert} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} autoHideDuration={3000} onClose={() => setOpenSnackAlert(false)}>
+        <Alert onClose={() => setOpenSnackAlert(false)} severity="error">
+          ERROR: Check that all required fields have been completed.
+        </Alert>
+      </Snackbar>
 
     </Grid>
   );

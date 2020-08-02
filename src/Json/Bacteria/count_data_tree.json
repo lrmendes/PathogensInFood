@@ -84,7 +84,7 @@
         "required": false
     },
     "counts_model": {
-        "data": ["opt1","opt2","opt3","opt4"],
+        "data": ["impute","pos_counts"],
         "label": "Counts Model",
         "type": "list",
         "required": true
