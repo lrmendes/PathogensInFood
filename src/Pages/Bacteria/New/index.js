@@ -23,6 +23,12 @@ import { Autocomplete } from "@material-ui/lab";
 import { Scope } from "@unform/core";
 import { Form } from "@unform/web";
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -140,6 +146,8 @@ export default function BacteriaNew() {
   })
 
   const [formExpanded, setFormExpanded] = useState(1); // 1: Form1 ; 2: Form2 ; 3: Form3
+
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -281,6 +289,45 @@ export default function BacteriaNew() {
     }
   }
 
+  async function handleSubmitForm3(data, { reset }, event) {
+    console.log(data);
+
+    let resErrors = {}
+    let haveErrors = false;
+    Object.keys(data).map((value,index) => {
+        let isTextField = form3Ref.current.getFieldRef(value).current || form3Ref.current.getFieldRef(value).props || true;
+
+        if (typeof isTextField != 'boolean') {
+          if (data[value] === "") {
+            form3Ref.current.setFieldError(value, true);
+            haveErrors = true;
+            resErrors[value] = Yup.string().required();
+          } else {
+            form3Ref.current.setFieldError(value, false);
+          }
+        } else {
+          if (data[value] === "") {
+            if (form3Ref.current.getFieldRef(value).required) {
+              form3Ref.current.setFieldError(value, true);
+              haveErrors = true;
+              resErrors[value] = Yup.string().required();
+            }
+          } else {
+            form3Ref.current.setFieldError(value, false);
+          }
+        }
+    });
+
+    if (!haveErrors) {
+      // Set Form1 Data
+      setFormData({...formData, form3: data });
+      // Open Form2
+      //setFormExpanded(3);
+      setDialogOpen(true);
+    }
+  }
+  
+
   const handleBackForm2 = () => {
     setFormData({...formData, form1: null, form2: null });
     // Open Form2
@@ -291,6 +338,57 @@ export default function BacteriaNew() {
     setFormData({...formData, form2: null, form3: null });
     // Open Form2
     setFormExpanded(2);
+  }
+
+  const clearPartialSubmit = () => {
+    setDialogOpen(false);
+
+    setFormData({...formData, form2: null, form3: null });
+    setFormExpanded(2);
+
+    setData(null);
+    setDataAux([jsonFoods]);
+    setSelectedCountry(null);
+    setDataCountGeneralInfo({});
+    setDataGeneralInfo({});
+    setDataPrevalenceGeneralInfo({});
+
+    Object.keys(formData.form2).map((value,index) => {
+      form2Ref.current.clearField(value);
+      //console.log(formRef.current.getFieldRef(value));
+
+      let isNativeSelect = form2Ref.current.getFieldRef(value).current || true;
+      let isAutoComplete = form2Ref.current.getFieldRef(value).props || true;
+
+      if (typeof isNativeSelect != 'boolean') {
+        //console.log("NativeSelect");
+        form2Ref.current.getFieldRef(value)['current']['value'] = "";
+      }
+
+      if (typeof isAutoComplete != 'boolean') {
+        //console.log("AutoCompelte");
+        form2Ref.current.getFieldRef(value)['state']['value'] = "";
+      }
+    });
+
+    Object.keys(formData.form3).map((value,index) => {
+      form3Ref.current.clearField(value);
+      //console.log(formRef.current.getFieldRef(value));
+
+      let isNativeSelect = form3Ref.current.getFieldRef(value).current || true;
+      let isAutoComplete = form3Ref.current.getFieldRef(value).props || true;
+
+      if (typeof isNativeSelect != 'boolean') {
+        //console.log("NativeSelect");
+        form3Ref.current.getFieldRef(value)['current']['value'] = "";
+      }
+
+      if (typeof isAutoComplete != 'boolean') {
+        //console.log("AutoCompelte");
+        form3Ref.current.getFieldRef(value)['state']['value'] = "";
+      }
+    });
+
   }
   
 
@@ -383,7 +481,11 @@ export default function BacteriaNew() {
   };
 
   const handleEssayType = (event) => {
-    setEssayType(event.target.value);
+    if (event.target.value === "") {
+      setEssayType(null);
+    } else {
+      setEssayType(event.target.value);
+    }
   };
 
   const handleGeneralInfo = (key, value) => {
@@ -531,670 +633,7 @@ export default function BacteriaNew() {
     "Beaufort_LAM_2007",
     "Bolocan_JFP_2015",
     "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
-    "Abay_AUVFD_2012",
-    "Abay_LWTFST_2017",
-    "Abrahim_JAFPT_2010",
-    "Agren_PVM_2016",
-    "Aguado_JFP_2001",
-    "Akineden_IJFM_2008",
-    "Akpolat_VRC_2004",
-    "Alessandria_IJFM_2010",
-    "Alexopoulos_Anaerobe_2011",
-    "Beaufort_LAM_2007",
-    "Bolocan_JFP_2015",
-    "Cetinkaya_JFS_2014",
-    "Ceylan_JFQ_2008",
+    "Ceylan_JFQ_2008"
   ];
 
   const jsonCountries = [
@@ -1516,14 +955,17 @@ export default function BacteriaNew() {
                     </MaterialNativeSelect>
 
                 {selectedAgent ? 
-                <FormControl component="fieldset" className={classes.formControl}>
-                <FormLabel component="legend">Essay Type</FormLabel>
-                <RadioGroup row aria-label="essayType" name="essayType1" value={essayType} onChange={handleEssayType}>
-                  <FormControlLabel value="0" control={<Radio />} label="Prevalence" />
-                  <FormControlLabel value="1" control={<Radio />} label="Count" />
-                  <FormControlLabel value="2" control={<Radio />} label="Both" />
-                </RadioGroup>
-                </FormControl>
+                  <MaterialNativeSelect
+                  name="essay"
+                  label={"Select Essay"}
+                  labelError={blank_text_error}
+                  onChange={handleEssayType}
+                >
+                  <option value={""}>Select</option>
+                  <option value={"0"}>Prevalence</option>
+                  <option value={"1"}>Count</option>
+                  <option value={"2"}>Both</option>
+                </MaterialNativeSelect>
                 : null}
                 </Paper>
               </Grid>
@@ -1727,7 +1169,7 @@ export default function BacteriaNew() {
               >
                 Next
               </Button>
-          </Grid>
+        </Grid>
         </Grid>
         </Form>
         </AccordionDetails>
@@ -1748,12 +1190,11 @@ export default function BacteriaNew() {
           </Grid>
         </AccordionSummary>
         <AccordionDetails style={{backgroundColor:Colors.backgroundColor}}>
-        <Form ref={form3Ref} className={classes.formWide} onSubmit={handleSubmit}>
+        <Form ref={form3Ref} className={classes.formWide} onSubmit={handleSubmitForm3}>
 
         <Grid container spacing={3}>
         
-        
-          <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={12}>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>General Results</Typography>
             <Divider />
             <Paper className={fixedHeightPaper}>
@@ -1835,57 +1276,58 @@ export default function BacteriaNew() {
         <Divider />
         <Paper className={fixedHeightPaper}>
         { 
-              (Object.keys(jsonCountGeneralInfo).map((json, index) => {
-                return (jsonCountGeneralInfo[json] == null 
-                ? 
-                <MaterialInput
-                  key={json}
-                  name={json}
-                  label={json+blank_text}
-                  placeholder={"enter text..."}
-                />
-                :
-                <MaterialNativeSelect
-                key={json}
-                labelError={blank_text_error}
-                label={json}
-                defaultValue={""}
-                name={json}
-                >
-                <option value={""}>Select</option >
-                {Object.keys(jsonGeneralInfo[json]).map((key) =>
-                  key != "label" && key != "selected" ? (
-                    <option key={key} value={key}>
-                      {key}
-                    </option >
-                  ) : null
-                )}
-                </MaterialNativeSelect>
-              )}))
-        }
+                  Object.entries(jsonCountGeneralInfo).map(([key, value]) => {
+                    return value.data == null 
+                    ?
+                  <MaterialInput
+                    key={key}
+                    name={key}
+                    label={value.label + (value.required ? required_text : blank_text)}
+                    type={value.type || "text"}
+                    isrequired={value.required}
+                    labelError={blank_text_error}
+                    placeholder={"enter text..."}
+                  />
+                  :
+                  <MaterialNativeSelect
+                  key={key}
+                  label={value.label + (value.required ? required_text : blank_text)}
+                  defaultValue={""}
+                  labelError={blank_text_error}
+                  name={key}
+                  >
+                  <option value={""}>Select</option >
+                  {value.data.map((dataValue) =>
+                    dataValue != "label" && dataValue != "selected" ? (
+                      <option key={dataValue} value={dataValue}>
+                        {dataValue}
+                      </option >
+                    ) : null
+                  )}
+                  </MaterialNativeSelect>
+              })}
         </Paper>
         </Grid>
         : null}
 
         <Grid item xs={12} md={12} container justify="flex-end">
-          <Button
-            onClick={() => handleBackForm3()}
-            variant="contained"
-            size="large"
-            className={classes.customBTN}
-          >
-            Back
-          </Button>
-          <Button
-            onClick={() => form3Ref.current.submitForm()}
-            variant="contained"
-            size="large"
-            className={classes.customBTN}
-          >
-            Register
-          </Button>
+              <Button
+                onClick={() => handleBackForm3()}
+                variant="contained"
+                size="large"
+                className={classes.customBTNBack}
+              >
+                Back
+              </Button>
+              <Button
+                onClick={() => form3Ref.current.submitForm()}
+                variant="contained"
+                size="large"
+                className={classes.customBTNNextRegister}
+              >
+                Register
+              </Button>
         </Grid>
-        
         </Grid>
         </Form>
 
@@ -1901,8 +1343,52 @@ export default function BacteriaNew() {
             { save 
             ? Object.keys(dataPrevalenceEssay).map(obj => <Typography>{obj}:{data[obj]}</Typography>)
             : null }
-            */}
+      */}
     </Grid>
+
+    <Dialog
+        open={dialogOpen}
+        onClose={() => clearPartialSubmit()}
+        scroll="paper"
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+      >
+        <DialogTitle id="scroll-dialog-title">Registered Data</DialogTitle>
+        <DialogContent dividers={true}>
+          <Typography variant="h6">{"Study, Agent & Essay"}</Typography>
+
+          {formData.form1 != null ?
+          Object.keys(formData.form1).map((key) => {
+          return <Typography key={"step1"+key}><b>{key}:</b> {formData.form1[key] == "" ? "" : formData.form1[key]}</Typography>
+          })
+          : null}
+
+          <Divider style={{marginTop: "10px", marginBottom: "10px"}} />
+          <Typography variant="h6">{"Food"}</Typography>
+
+          {formData.form2 != null ?
+          Object.keys(formData.form2).map((key) => {
+          return <Typography key={"step2"+key}><b>{key}:</b> {formData.form2[key] == "" ? "" : formData.form2[key]}</Typography>
+          })
+          : null}
+
+          <Divider style={{marginTop: "10px", marginBottom: "10px"}} />
+          <Typography variant="h6">{"Results"}</Typography>
+
+          {formData.form3 != null ?
+          Object.keys(formData.form3).map((key) => {
+          return <Typography key={"step3"+key}><b>{key}:</b> {formData.form3[key] == "" ? "" : formData.form3[key]}</Typography>
+          })
+          : null}
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => clearPartialSubmit()} size="large" className={classes.customBTNNextRegister}>
+            Register Next
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Grid>
   );
 }
