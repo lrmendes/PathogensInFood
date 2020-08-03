@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/PathogensInFood/static/js/main.85a1091e.chunk.js",
-    "main.js.map": "/PathogensInFood/static/js/main.85a1091e.chunk.js.map",
+    "main.js": "/PathogensInFood/static/js/main.c232bbad.chunk.js",
+    "main.js.map": "/PathogensInFood/static/js/main.c232bbad.chunk.js.map",
     "runtime-main.js": "/PathogensInFood/static/js/runtime-main.48c3daed.js",
     "runtime-main.js.map": "/PathogensInFood/static/js/runtime-main.48c3daed.js.map",
     "static/js/2.2dadea97.chunk.js": "/PathogensInFood/static/js/2.2dadea97.chunk.js",
     "static/js/2.2dadea97.chunk.js.map": "/PathogensInFood/static/js/2.2dadea97.chunk.js.map",
     "index.html": "/PathogensInFood/index.html",
-    "precache-manifest.58f4c1c63c6e0be1fefff4c1d418d4bd.js": "/PathogensInFood/precache-manifest.58f4c1c63c6e0be1fefff4c1d418d4bd.js",
+    "precache-manifest.bb0125ab938cf4ab00a4b882d86ec2a7.js": "/PathogensInFood/precache-manifest.bb0125ab938cf4ab00a4b882d86ec2a7.js",
     "service-worker.js": "/PathogensInFood/service-worker.js",
     "static/js/2.2dadea97.chunk.js.LICENSE.txt": "/PathogensInFood/static/js/2.2dadea97.chunk.js.LICENSE.txt",
     "static/media/bacteria.8f08db80.svg": "/PathogensInFood/static/media/bacteria.8f08db80.svg",
@@ -21,6 +21,6 @@
   "entrypoints": [
     "static/js/runtime-main.48c3daed.js",
     "static/js/2.2dadea97.chunk.js",
-    "static/js/main.85a1091e.chunk.js"
+    "static/js/main.c232bbad.chunk.js"
   ]
 }

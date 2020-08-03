@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "10b60bac37fed0a24bbe35da257fd40c",
+    "revision": "87662066a29041319d4452b6483ab1ae",
     "url": "/PathogensInFood/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/PathogensInFood/static/js/2.2dadea97.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "7a4f266604beb3caaa3c",
-    "url": "/PathogensInFood/static/js/main.85a1091e.chunk.js"
+    "revision": "c60a9fc80ab4a5095673",
+    "url": "/PathogensInFood/static/js/main.c232bbad.chunk.js"
   },
   {
     "revision": "1ce10ab1263c632f69ce",
