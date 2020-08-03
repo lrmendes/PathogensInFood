@@ -18,8 +18,8 @@
         "required": true
     },
     "temp_retail": {
-        "data": ["ambiente","chill","frozen","various"],
-        "label": "Stage",
+        "data": ["ambient","chill","frozen","various"],
+        "label": "Temp Retail",
         "type": "list",
         "required": true
     },

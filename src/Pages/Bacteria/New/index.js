@@ -54,6 +54,9 @@ import json_general_info from "../../../Json/Bacteria/food_characteristics.json"
 //import json_agent_prevalence from '../../../Json/Bacteria/agent_prevalence_tree.json';
 import json_foods from "../../../Json/Bacteria/foodclass_tree.json";
 import json_agent from "../../../Json/Bacteria/agent_tree.json";
+
+import json_agent_general from "../../../Json/Bacteria/agent_general.json";
+
 import json_general_results from "../../../Json/Bacteria/general_results.json";
 
 import json_general_prevalence from "../../../Json/Bacteria/prevalence_data_tree.json";
@@ -983,6 +986,37 @@ export default function BacteriaNew() {
                   <option value={"2"}>Both</option>
                 </MaterialNativeSelect>
                 : null}
+
+                { 
+                Object.entries(json_agent_general).map(([key, value]) => {
+                  return value.data == null 
+                  ?
+                <MaterialInput
+                  key={key}
+                  name={key}
+                  label={value.label + (value.required ? required_text : blank_text)}
+                  type={value.type || "text"}
+                  isrequired={value.required}
+                  labelError={blank_text_error}
+                  placeholder={"enter text..."}
+                />
+                :
+                <MaterialNativeSelect
+                key={key}
+                label={value.label + (value.required ? required_text : blank_text)}
+                defaultValue={""}
+                labelError={blank_text_error}
+                name={key}
+                >
+                <option value={""}>Select</option >
+                {value.data.map((dataValue) =>
+                <option key={dataValue} value={dataValue}>
+                  {dataValue}
+                </option >
+                )}
+                </MaterialNativeSelect>
+                })}
+
                 </Paper>
               </Grid>
         { essayType == 2 || essayType == 0 ?

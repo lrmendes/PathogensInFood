@@ -1,0 +1,14 @@
+{
+    "agent_label": {
+        "data": null,
+        "label": "Agent Label",
+        "type": "text",
+        "required": true
+    },
+    "serovar_serotype": {
+        "data": null,
+        "label": "Serovar/Serotype",
+        "type": "text",
+        "required": false
+    }
+}
