@@ -137,6 +137,42 @@ export default function BacteriaNew() {
     }
   }
 
+  async function handleSubmitFormType1(data, { reset }) {
+    console.log(data);
+
+    let resErrors = {}
+    let haveErrors = false;
+    Object.keys(data).map((value,index) => {
+        let isTextField = formType1Ref.current.getFieldRef(value).current || formType1Ref.current.getFieldRef(value).props || true;
+
+        if (typeof isTextField != 'boolean') {
+          if (data[value] === "") {
+            formType1Ref.current.setFieldError(value, true);
+            haveErrors = true;
+            resErrors[value] = Yup.string().required();
+          } else {
+            formType1Ref.current.setFieldError(value, false);
+          }
+        } else {
+          if (data[value] === "") {
+            if (formType1Ref.current.getFieldRef(value).required) {
+              formType1Ref.current.setFieldError(value, true);
+              haveErrors = true;
+              resErrors[value] = Yup.string().required();
+            }
+          } else {
+            formType1Ref.current.setFieldError(value, false);
+          }
+        }
+    });
+
+    if (!haveErrors) {
+      console.log("Registrado com sucesso!");
+    } else {
+      setOpenSnackAlert(true);
+    }
+  }
+
   const handleRegisterType = (event) => {
     setRegisterType(event.target.value);
   }
@@ -145,15 +181,41 @@ export default function BacteriaNew() {
     setWorkFile({});
 
     let raw = rawFile;
+    // SPLIT BIB Line by Line (Each line have attribute = value)
     let rawLine = raw.split(/\n/);
+    let newWorkFile = {};
+
+    if (rawLine[0].includes('@')) {
+      let startIndex = rawLine[0].indexOf('{') + 1;
+      let endIndex = rawLine[0].length;
+      if (rawLine[0][rawLine[0].length-1] == ",") {
+        endIndex = rawLine[0].length - 1;
+      }
+      newWorkFile["study_id"] = rawLine[0].substr(startIndex,endIndex);
+    }
+
     for (let i in rawLine) {
       if (rawLine[i].includes('=')) {
-        let varValue = rawLine[i].split('=')[1];
-        let varName = rawLine[i].split('=')[0].trim();  
-        //console.log(varName," -> ",varValue);
-        setWorkFile({...workFile, [varName]: varValue});
+        // Split VARNAME and VARVALUE from BIB Line
+        let varValue = rawLine[i].split(/=(.+)/)[1];
+        let varName = rawLine[i].split('=')[0].trim();  // Remove Spaces from VARNAME
+
+        // Check if Value is inside { }
+        if (varValue.includes("{") && varValue.includes("}")) {
+          // Remove the First "{" from VARVALUE
+          varValue = varValue.split(/{(.+)/)[1];
+
+          // Remove the Last "}" from VARVALUE
+          varValue = varValue.split("").reverse().join("");
+          varValue = varValue.split(/}(.+)/)[1];
+          varValue = varValue.split("").reverse().join("");
+        }
+
+        console.log("[",varName,"] ",varValue);
+        newWorkFile[varName] = varValue;        
       }
     }
+    setWorkFile(newWorkFile);
   }
 
   const handleFileChosen = (file) => {
@@ -179,14 +241,16 @@ export default function BacteriaNew() {
         <Paper className={fixedHeightPaper}>
           <FormControl component="fieldset" className={classes.formControl}>
           <RadioGroup row aria-label="essayType" name="registerType" value={registerType} onChange={handleRegisterType}>
-            <FormControlLabel value="0" selected control={<Radio />} label="From BibTex" />
+            <FormControlLabel value="0" selected control={<Radio />} label="From Bib" />
             <FormControlLabel value="1" control={<Radio />} label="Manual Entry" />
           </RadioGroup>
           </FormControl>
         </Paper>
       </Grid>
       {registerType === "0" 
-      ? 
+      ?
+      <>
+
       <Grid item xs={12} md={12}>
         <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Upload File (only bib/txt)</Typography>
         <Divider />
@@ -224,32 +288,56 @@ export default function BacteriaNew() {
         </Box>
         </Grid>
         </Paper>
+      </Grid>
+      
+      <Grid item xs={12} md={12}>
+      <Form ref={formType1Ref} className={classes.formWide} onSubmit={handleSubmitFormType1}>
 
+      {Object.keys(workFile).length > 0 
+      ? <Grid container spacing={3}>
       <Grid item xs={12} md={12}>
       <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>Study Info</Typography>
       <Divider />
       <Paper className={fixedHeightPaper}>
       { 
           Object.entries(workFile).map(([key, value]) => {
-            return value.data == null 
-            ?
-            <MaterialInput
-            key={key}
-            name={key}
-            label={value}
-            type={"text"}
-            isrequired={true}
-            labelError={blank_text_error}
-            placeholder={"enter text..."}
-          />
-          : null
+            return (
+              <MaterialInput
+              key={key}
+              name={key}
+              label={key + required_text}
+              type={"text"}
+              defaultValue={value}
+              isrequired={true}
+              labelError={blank_text_error}
+              placeholder={"enter text..."}
+              />
+          )
       })}
       </Paper>
       </Grid>
 
+      <Grid item xs={12} md={12} container justify="flex-end">
+      <Button
+        onClick={() => formType1Ref.current.submitForm()}
+        variant="contained"
+        size="large"
+        className={classes.customBTN}
+      >
+        Register
+      </Button>
       </Grid>
-      : null
-      }
+      </Grid>
+
+      : null}
+
+      </Form>
+      </Grid>
+
+      </>
+
+      : null }
+
       {registerType === "1"
       ? 
       <Grid item xs={12} md={12}>
