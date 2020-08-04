@@ -1,16 +1,68 @@
 {
-    "study_id": null,
-    "study_type": {
-        "comparison": null,
-        "survey": null
+    "study_id": {
+        "data": null,
+        "label": "Study ID",
+        "type": "text",
+        "required": true
     },
-    "duration_of_survey": null,
-    "author": null,
-    "title": null,
-    "journal": null,
-    "volume": null,
-    "pages": null,
-    "year": null,
-    "DOI": null,
-    "url": null
+    "study_type": {
+        "data": ["comparison","farm","survey"],
+        "label": "Study Type",
+        "type": "list",
+        "required": true
+    },
+    "duration_of_survey": {
+        "data": null,
+        "label": "Duration of Survey",
+        "type": "number",
+        "required": true
+    },
+    "author": {
+        "data": null,
+        "label": "Author(s)",
+        "type": "text",
+        "required": true
+    },
+    "title": {
+        "data": null,
+        "label": "Title",
+        "type": "text",
+        "required": true
+    },
+    "journal": {
+        "data": null,
+        "label": "Journal",
+        "type": "text",
+        "required": false
+    },
+    "volume": {
+        "data": null,
+        "label": "Volume",
+        "type": "text",
+        "required": false
+    },
+    "pages": {
+        "data": null,
+        "label": "Pages",
+        "type": "text",
+        "required": false
+    },
+    "year": {
+        "data": null,
+        "label": "Year",
+        "type": "number",
+        "required": true
+    },
+    "DOI": {
+        "data": null,
+        "label": "DOI",
+        "type": "text",
+        "required": true
+    },
+    "url": {
+        "data": null,
+        "label": "URL",
+        "type": "text",
+        "required": false
+    }
 }
