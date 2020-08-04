@@ -178,12 +178,13 @@ export default function BacteriaNew() {
   }
 
   const handleFileVariables = () => {
-    setWorkFile({});
+    
+    let newWorkFile = {};
 
     let raw = rawFile;
     // SPLIT BIB Line by Line (Each line have attribute = value)
     let rawLine = raw.split(/\n/);
-    let newWorkFile = {};
+    
 
     if (rawLine[0].includes('@')) {
       let startIndex = rawLine[0].indexOf('{') + 1;
@@ -219,6 +220,8 @@ export default function BacteriaNew() {
   }
 
   const handleFileChosen = (file) => {
+    setWorkFile({});
+    
     if (file === undefined || file === null) {
       setRawFile(null);
       return null;
