@@ -9,7 +9,7 @@
         "data": null,
         "label": "LoD",
         "type": "number",
-        "required": true
+        "required": false
     },
     "detec_enrichment": {
         "data": null,

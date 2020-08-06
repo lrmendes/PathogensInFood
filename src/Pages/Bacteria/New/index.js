@@ -359,7 +359,88 @@ export default function BacteriaNew() {
     setFormExpanded(2);
   }
 
-  const clearPartialSubmit = () => {
+  const clearAgent = () => {
+    setDialogOpen(false);
+
+    setFormData({ form1: null, form2: null, form3: null });
+    setFormExpanded(1);
+
+    setData(null);
+    setDataAux([jsonFoods]);
+    setSelectedCountry(null);
+    setDataCountGeneralInfo({});
+    setDataGeneralInfo({});
+    setDataPrevalenceGeneralInfo({});
+
+    setEssayType(-1);
+    setSelectedAgent(null);
+    setJsonEssayCount(null);
+    setDataAuxEssayCount([null]);
+    setJsonEssayPrevalence(null);
+    setDataAuxEssayPrevalence([null]);
+
+    // Clear Form1 (Without STUDYID FIELD)
+    Object.keys(formData.form1).map((value,index) => {
+      if (value !== "study_id") {
+        form1Ref.current.clearField(value);
+        //console.log(formRef.current.getFieldRef(value));
+  
+        let isNativeSelect = form1Ref.current.getFieldRef(value).current || true;
+        let isAutoComplete = form1Ref.current.getFieldRef(value).props || true;
+  
+        if (typeof isNativeSelect != 'boolean') {
+          //console.log("NativeSelect");
+          form1Ref.current.getFieldRef(value)['current']['value'] = "";
+        }
+  
+        if (typeof isAutoComplete != 'boolean') {
+          //console.log("AutoCompelte");
+          form1Ref.current.getFieldRef(value)['state']['value'] = "";
+        }
+      }
+    });
+
+    // Clear Form2
+    Object.keys(formData.form2).map((value,index) => {
+      form2Ref.current.clearField(value);
+      //console.log(formRef.current.getFieldRef(value));
+
+      let isNativeSelect = form2Ref.current.getFieldRef(value).current || true;
+      let isAutoComplete = form2Ref.current.getFieldRef(value).props || true;
+
+      if (typeof isNativeSelect != 'boolean') {
+        //console.log("NativeSelect");
+        form2Ref.current.getFieldRef(value)['current']['value'] = "";
+      }
+
+      if (typeof isAutoComplete != 'boolean') {
+        //console.log("AutoCompelte");
+        form2Ref.current.getFieldRef(value)['state']['value'] = "";
+      }
+    });
+
+    // Clear Form3
+    Object.keys(formData.form3).map((value,index) => {
+      form3Ref.current.clearField(value);
+      //console.log(formRef.current.getFieldRef(value));
+
+      let isNativeSelect = form3Ref.current.getFieldRef(value).current || true;
+      let isAutoComplete = form3Ref.current.getFieldRef(value).props || true;
+
+      if (typeof isNativeSelect != 'boolean') {
+        //console.log("NativeSelect");
+        form3Ref.current.getFieldRef(value)['current']['value'] = "";
+      }
+
+      if (typeof isAutoComplete != 'boolean') {
+        //console.log("AutoCompelte");
+        form3Ref.current.getFieldRef(value)['state']['value'] = "";
+      }
+    });
+
+  }
+
+  const clearFood = () => {
     setDialogOpen(false);
 
     setFormData({...formData, form2: null, form3: null });
@@ -409,8 +490,84 @@ export default function BacteriaNew() {
     });
 
   }
-  
 
+  const clearEndFull = () => {
+    setDialogOpen(false);
+
+    setFormData({form1: null, form2: null, form3: null });
+    setFormExpanded(1);
+
+    setData(null);
+    setDataAux([jsonFoods]);
+    setSelectedCountry(null);
+    setDataCountGeneralInfo({});
+    setDataGeneralInfo({});
+    setDataPrevalenceGeneralInfo({});
+
+    setEssayType(-1);
+    setSelectedAgent(null);
+    setJsonEssayCount(null);
+    setDataAuxEssayCount([null]);
+    setJsonEssayPrevalence(null);
+    setDataAuxEssayPrevalence([null]);
+
+    // Clear Form1 (Without STUDYID FIELD)
+    Object.keys(formData.form1).map((value,index) => {
+      form1Ref.current.clearField(value);
+      //console.log(formRef.current.getFieldRef(value));
+
+      let isNativeSelect = form1Ref.current.getFieldRef(value).current || true;
+      let isAutoComplete = form1Ref.current.getFieldRef(value).props || true;
+
+      if (typeof isNativeSelect != 'boolean') {
+        //console.log("NativeSelect");
+        form1Ref.current.getFieldRef(value)['current']['value'] = "";
+      }
+
+      if (typeof isAutoComplete != 'boolean') {
+        //console.log("AutoCompelte");
+        form1Ref.current.getFieldRef(value)['state']['value'] = "";
+      }
+    });
+
+    Object.keys(formData.form2).map((value,index) => {
+      form2Ref.current.clearField(value);
+      //console.log(formRef.current.getFieldRef(value));
+
+      let isNativeSelect = form2Ref.current.getFieldRef(value).current || true;
+      let isAutoComplete = form2Ref.current.getFieldRef(value).props || true;
+
+      if (typeof isNativeSelect != 'boolean') {
+        //console.log("NativeSelect");
+        form2Ref.current.getFieldRef(value)['current']['value'] = "";
+      }
+
+      if (typeof isAutoComplete != 'boolean') {
+        //console.log("AutoCompelte");
+        form2Ref.current.getFieldRef(value)['state']['value'] = "";
+      }
+    });
+
+    Object.keys(formData.form3).map((value,index) => {
+      form3Ref.current.clearField(value);
+      //console.log(formRef.current.getFieldRef(value));
+
+      let isNativeSelect = form3Ref.current.getFieldRef(value).current || true;
+      let isAutoComplete = form3Ref.current.getFieldRef(value).props || true;
+
+      if (typeof isNativeSelect != 'boolean') {
+        //console.log("NativeSelect");
+        form3Ref.current.getFieldRef(value)['current']['value'] = "";
+      }
+
+      if (typeof isAutoComplete != 'boolean') {
+        //console.log("AutoCompelte");
+        form3Ref.current.getFieldRef(value)['state']['value'] = "";
+      }
+    });
+
+  }
+  
   async function handleSubmit(data, { reset }, event) {
     //console.log(Yup.object());
     //event.preventDefault();
@@ -531,7 +688,8 @@ export default function BacteriaNew() {
     setDataCountGeneralInfo({ ...dataCountGeneralInfo, [key]: value });
   };
 
-  const validateForm = () => {
+ /*
+ const validateForm = () => {
     let finalJson = {};
 
     //console.log("Study Info:",selectedStudy);
@@ -582,6 +740,7 @@ export default function BacteriaNew() {
 
     console.log(finalJson);
   };
+ */
 
   const handleEssayPrevalence = (label, index, event) => {
     console.log("[", index, "] Alterou: ", label, " - ", event);
@@ -968,24 +1127,10 @@ export default function BacteriaNew() {
                         key != "label" && key != "selected" ? (
                           <option key={key} value={key}>
                             {key}
-                          </option >
+                          </option>
                         ) : null
                       )}
                     </MaterialNativeSelect>
-
-                {selectedAgent ? 
-                  <MaterialNativeSelect
-                  name="essay"
-                  label={"Select Essay"  + required_text}
-                  labelError={blank_text_error}
-                  onChange={handleEssayType}
-                >
-                  <option value={""}>Select</option>
-                  <option value={"0"}>Prevalence</option>
-                  <option value={"1"}>Count</option>
-                  <option value={"2"}>Both</option>
-                </MaterialNativeSelect>
-                : null}
 
                 { 
                 Object.entries(json_agent_general).map(([key, value]) => {
@@ -1016,6 +1161,20 @@ export default function BacteriaNew() {
                 )}
                 </MaterialNativeSelect>
                 })}
+
+                {selectedAgent ? 
+                  <MaterialNativeSelect
+                  name="essay"
+                  label={"Select Essay"  + required_text}
+                  labelError={blank_text_error}
+                  onChange={handleEssayType}
+                >
+                  <option value={""}>Select</option>
+                  <option value={"0"}>Prevalence</option>
+                  <option value={"1"}>Count</option>
+                  <option value={"2"}>Both</option>
+                </MaterialNativeSelect>
+                : null}
 
                 </Paper>
               </Grid>
@@ -1389,7 +1548,7 @@ export default function BacteriaNew() {
 
     <Dialog
         open={dialogOpen}
-        onClose={() => clearPartialSubmit()}
+        onClose={() => clearEndFull()}
         scroll="paper"
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
@@ -1426,9 +1585,17 @@ export default function BacteriaNew() {
 
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => clearPartialSubmit()} size="large" className={classes.customBTNNextRegister}>
-            Register Next
-          </Button>
+          <Grid container direction="column">
+            <Button onClick={() => clearAgent()} size="large" className={classes.customBTNNextRegister}>
+              Another Agent
+            </Button>
+            <Button onClick={() => clearFood()} size="large" style={{marginTop: "5px"}} className={classes.customBTNNextRegister}>
+              Another Food (same agent)
+            </Button>
+            <Button onClick={() => clearEndFull()} size="large" style={{marginTop: "5px"}} className={classes.customBTNNextRegister}>
+              End
+            </Button>
+          </Grid>
         </DialogActions>
       </Dialog>
 
