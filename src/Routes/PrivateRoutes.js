@@ -8,6 +8,7 @@ import BacteriaNew from "../Pages/Bacteria/New";
 import StudyNew from "../Pages/Study/New";
 import BacteriaSearch from "../Pages/Bacteria/Search";
 import BacteriaManage from "../Pages/Bacteria/Manage";
+import About from "../Pages/About";
 
 function PrivateRoutes() {
   return (
@@ -15,6 +16,7 @@ function PrivateRoutes() {
       <Switch>
         <MainLayout>
             <Route path="/" exact component={Dashboard} />
+            <Route path="/about" exact component={About} />
             <Route path="/new/bacteria" exact component={BacteriaNew} />
             <Route path="/bacteria/search" exact component={BacteriaSearch} />     
             <Route path="/bacteria/manage" exact component={BacteriaManage} />     
