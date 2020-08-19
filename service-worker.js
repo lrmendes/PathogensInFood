@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/PathogensInFood/precache-manifest.f77be4ca2c27761aeedcf6d7e569eee7.js"
+  "/PathogensInFood/precache-manifest.057a4cce64f18cc941e2ddcef49aec45.js"
 );
 
 self.addEventListener('message', (event) => {
