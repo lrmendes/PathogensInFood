@@ -29,6 +29,9 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import CardMedia from '@material-ui/core/CardMedia';
 import SvgIcon from '@material-ui/core/SvgIcon';
 
+import InfoIcon from '@material-ui/icons/Info';
+import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
+
 import Colors from '../Styles/Colors';
 
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
@@ -298,8 +301,24 @@ export default function SideBar({ isOpen, setTitle }) {
               path: "/tree/bacteria/general",
             },
           ]
-        },
-        
+        },        
+        ]
+      },
+      {
+        name: "System Informations",
+        listItems: [
+          {
+            name: "Informations",
+            icon: <BusinessOutlinedIcon />,
+            state: "tree_system",
+            subListItems: [
+              {
+                name: "About",
+                icon: <InfoIcon />,
+                path: "/about",
+              },
+            ]
+          },
         ]
       }
     ]
